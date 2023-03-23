@@ -1,0 +1,24 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem;
+  overflow: hidden;
+
+}
+
+.App {
+  margin: 0 auto;
+  display: grid;
+  grid-template-areas:
+  "head head"
+  "cont cont";
+
+  grid-template-rows: 80px 1fr;
+  grid-template-columns: 2fr 10fr;
+}
+
+.app-wrapper-content{
+  grid-area: cont;
+  background-color: seagreen;
+  height: 90vh;
+}
