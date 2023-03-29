@@ -1,5 +1,9 @@
-import React from "react";
+import React, {Component, useState} from "react";
 import Cards from "./Cards/Cards";
+import CreateCard from "../CreateCard/CreateCard";
+import s from "./MainPage.module.css"
+import {NavLink, Outlet, redirect} from "react-router-dom";
+import createCard from "../CreateCard/CreateCard";
 
 const CardList = [
     {
@@ -39,13 +43,42 @@ const CardList = [
         imageUrl: 'https://i.pinimg.com/originals/9b/ee/39/9bee39da063b29c4f03e60466bd511a2.jpg',
     },
 ]
-const MainPage = () => {
-    return(
-        <div>
-          <h1>Welcome to our main page</h1>
-            <Cards cards={CardList}/>
-        </div>
-    )
+
+
+class MainPage extends Component<any, any>{
+
+    constructor(props: any) {
+        super(props);
+        this.state={
+            isOpen: false,
+            cardList: {...CardList}
+        }
+    this.updateCardList = this.updateCardList.bind(this)
+
+    }
+
+    updateCardList(card: any){
+       CardList.push(card)
+    }
+    render() {
+        return (
+            <div className={s.main}>
+                <h1>Welcome to our main page</h1>
+                <Outlet context={this.updateCardList}/>
+                {!this.state.isOpen? <NavLink to={`createcard/`}>
+                        <button onClick={() => {this.setState({ isOpen: true})}}>Create new Card</button>
+                    </NavLink>
+                    : <NavLink to={`./`}>
+                        <button onClick={() => {this.setState({ isOpen: false})}}>Close Window</button>
+                    </NavLink>}
+
+
+                <Cards cards={CardList}/>
+            </div>
+        )
+    }
+
+
 }
 
 export default MainPage;

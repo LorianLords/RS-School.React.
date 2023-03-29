@@ -29,7 +29,7 @@ class Header extends Component<any, any>{
         /* localStorage.setItem('search', this.state.value)*/
     }
 
-    handleSubmit (event:any){
+    handleSubmit (event: any){
         event.preventDefault(); // предотвращаем перезагрузку страницы
         const input = event.target.elements.q.value; // получаем доступ к полю ввода
         localStorage.setItem('search', input)
@@ -38,7 +38,6 @@ class Header extends Component<any, any>{
         const value = event.target.value;
         this.setState({...this.state, value});
         localStorage.setItem('search', this.state.value)
-
     }
 
 

@@ -1,0 +1,12 @@
+
+
+.window{
+    background: rgba(0,0,0,0.5);
+    width: 300px;
+    height: 400px;
+    padding: 10px;
+    display: grid;
+
+    border-radius: 2em;
+    margin: 15px;
+}

@@ -6,6 +6,7 @@ import './index.css'
 import ErrorPage from "./components/ErrorPage/ErrorPage";
 import MainPage from "./components/MainPage/MainPage";
 import AboutUs from "./components/AboutUs/AboutUs";
+import CreateCard from "./components/CreateCard/CreateCard";
 
 const router = createBrowserRouter([
     {
@@ -19,8 +20,14 @@ const router = createBrowserRouter([
             },
             {
                 path: "main/",
-                element: <MainPage />
-            }
+                element: <MainPage />,
+                children: [
+                    {
+                        path: "createcard/",
+                        element:  <CreateCard/>
+                    }
+                ]
+            },
         ]
     },
 
