@@ -4,20 +4,25 @@ import {ICard} from "../../../../models";
 
 export interface CardProps {
     id: number,
-    title: string;
-    description: string;
-    imageUrl: string;
+    name: string,
+    tripDate: string;
+    tripType: string;
+    overnightStay: boolean
+    tripImg: string
+
 }
 
 class Card extends Component<CardProps> {
     render() {
 
-        const { title, description , imageUrl } = this.props;
+        const { name, tripDate, tripType , overnightStay, tripImg } = this.props;
         return (
             <div className={s.card}>
-                <img src={imageUrl} alt={title} />
-                <h2>{title}</h2>
-                <p>{description}</p>
+                <img src={tripImg} alt={name} />
+                <h2>{name}</h2>
+                <h3>{tripType}</h3>
+                <p>date of trip: {tripDate}</p>
+                <p>overnight stay is{!overnightStay? "not": ""} include</p>
             </div>
         );
     }

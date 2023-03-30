@@ -16,10 +16,12 @@ class Cards extends Component<CardsProps> {
             <div className={s.cards}>
                 {cards.map((card) => (
                     <Card
-                        id={card.id}
-                        title={card.title}
-                        description={card.description}
-                        imageUrl={card.imageUrl}
+                    id={card.id}
+                    name={card.name}
+                    tripDate={card.tripDate}
+                    tripType={card.tripType}
+                    overnightStay={card.overnightStay}
+                    tripImg={card.tripImg}
                      />
                 ))}
             </div>

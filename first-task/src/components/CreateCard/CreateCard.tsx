@@ -1,58 +1,71 @@
-import React, {ChangeEvent, Component, createRef, FormEvent, RefObject} from "react";
+import React, {ChangeEvent, ChangeEventHandler, Component, createRef, FormEvent, RefObject} from "react";
 import s from "./CreateCard.module.css"
 import {useOutletContext, NavLink} from "react-router-dom";
 
 interface FormState {
     id?: number,
-    name: string | undefined;
-    dateOfTrip: string | undefined;
-    typeOfTrip: string;
-    withOvernightStay: boolean
-    tripImg: string
+    /*   name: string | undefined;
+       dateOfTrip: string | undefined;
+       typeOfTrip: string;
+       withOvernightStay: boolean
+       tripImg: string*/
+    selectedOption: string
 
 }
 
-class CreateCard extends Component<any, FormState> {
+class CreateCard extends Component<any, any> {
 
 
-     private input: RefObject<HTMLInputElement> = React.createRef()
-     private date: RefObject<HTMLInputElement> = React.createRef()
+    private input: RefObject<HTMLInputElement> = React.createRef()
+    private date: RefObject<HTMLInputElement> = React.createRef()
     private typeOfTrip: RefObject<HTMLSelectElement> = React.createRef()
-    private withOvernightStay: RefObject<HTMLInputElement> = React.createRef()
-    private tripImg:  RefObject<HTMLInputElement> = React.createRef()
+    private withNight: RefObject<HTMLInputElement> = React.createRef()
+    private withoutNight: RefObject<HTMLInputElement> = React.createRef()
+    private tripImg: RefObject<HTMLInputElement> = React.createRef()
 
     constructor(props: any) {
         super(props)
-            this.handleSubmit = this.handleSubmit.bind(this)
-    }
-    handleSubmit(event:  React.FormEvent<HTMLFormElement>){
+        this.state = {
+            selectedOption: "withNight",
+        }
+        this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleRadioChange = this.handleRadioChange.bind(this)
 
-      alert(this.input.current?.value + " " + this.date.current?.value)
+    }
+
+    handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-      debugger
+
         const file = this.tripImg.current?.files?.[0];
         let imageUrl = null;
-        if (file){
+        if (file) {
             imageUrl = URL.createObjectURL(file);
         }
-        const withOver = this.withOvernightStay.current?.checked? this.withOvernightStay.current.value : null;
+        const overnightStay = this.withNight.current?.checked
         const card = {
-          tripName: this.input.current?.value,
-          tripDate: this.date.current?.value,
-          tripType: this.typeOfTrip.current?.value,
-          tripImg: imageUrl,
-          withOvernightStay: this.withOvernightStay.current?.checked? this.withOvernightStay.current.value : null
-      }
-        console.log(card)
+            id: 7,
+            name: this.input.current?.value,
+            tripDate: this.date.current?.value,
+            tripType: this.typeOfTrip.current?.value,
+            overnightStay: overnightStay,
+            tripImg: imageUrl,
+
+        }
+        this.props.updateCardList(card)
+        console.log()
+
     }
-    render() {
 
-        const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    handleRadioChange(event: React.ChangeEvent<HTMLInputElement>) {
+        debugger
+         this.setState({ selectedOption: event.target.value})
+    }
+
+    /*    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
             const file = event.target.files && event.target.files[0];
-           // this.setState({ file });
-       };
-
-
+            // this.setState({ file });
+        };*/
+    render() {
         return (
             <div className={s.window}>
                 <form onSubmit={this.handleSubmit}>
@@ -69,28 +82,41 @@ class CreateCard extends Component<any, FormState> {
                         Дата начала: <br/>
                         <input type={"date"}
                                min={"01.06.2023"}
-                        ref={this.date}/>
+                               ref={this.date}/>
                     </label>
                     <br/>
                     <label htmlFor="">
                         Тип туристической экскурсии:
-                        <select value={"bus"} ref={this.typeOfTrip}>
+                        <select ref={this.typeOfTrip}>
                             <option value="bus">Туристический автобус</option>
                             <option value="walk">Пешая прогулка</option>
                             <option value="water">Водный транспорт</option>
                         </select>
                     </label>
-                    <br/>
-                    <input type="radio" name="topping" value="true" ref={this.withOvernightStay} id="regular"/>
-                    <label htmlFor="regular">с ночевкой</label>
-                    <input type="radio" name="topping" value="false" ref={this.withOvernightStay} id="medium"/>
-                    <label htmlFor="medium">без ночевки</label>
+                    <div>
+                        <input type="radio"
+                               name="withNight"
+                               value="withNight"
+                               checked={"withNight" === this.state.selectedOption}
+                               ref={this.withNight}
+                               id="withNight"
+                               onChange={this.handleRadioChange}/>
+
+                        <label htmlFor="with">с ночевкой</label>
+                        <input type="radio"
+                               name="withoutNight"
+                               value="withoutNight"
+                               checked={"withoutNight" === this.state.selectedOption}
+                               ref={this.withoutNight}
+                               id="withoutNight"
+                               onChange={this.handleRadioChange}/>
+                        <label htmlFor="without">без ночевки</label>
+                    </div>
 
 
                     <input type="file" accept="image/*" ref={this.tripImg}/>
                     <input type="submit" value={"Создать"}/>
                 </form>
-
 
 
             </div>
