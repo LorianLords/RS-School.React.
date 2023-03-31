@@ -6,32 +6,25 @@ interface CardsProps {
   cards: CardProps[];
 }
 
-class Cards extends Component<CardsProps> {
-  render() {
-    const { cards } = this.props;
+const Cards = (props: CardsProps) => {
+  const { cards } = props;
 
-    return (
-      <div className={s.cards}>
-        {cards.map((card) => (
-          <Card
-            id={card.id}
-            key={card.id}
-            name={card.name}
-            tripDate={card.tripDate}
-            tripType={card.tripType}
-            overnightStay={card.overnightStay}
-            tripImg={card.tripImg}
-          />
-        ))}
-      </div>
-    );
-  }
-}
+  return (
+    <div className={s.cards}>
+      {cards.map((card) => (
+        <Card
+          id={card.id}
+          key={card.id}
+          name={card.name}
+          tripDate={card.tripDate}
+          tripType={card.tripType}
+          overnightStay={card.overnightStay}
+          tripImg={card.tripImg}
+        />
+      ))}
+    </div>
+  );
+};
 
 export default Cards;
 
-/*
-
-export const cards: ICard[] = [
-
-]*/
