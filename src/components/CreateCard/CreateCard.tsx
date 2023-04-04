@@ -21,7 +21,7 @@ const CreateCard = (props: any) => {
     defaultValues: {
       tripName: 'welcome to paris',
       tripDate: '',
-      tripType: '',
+      tripType: 'Tourist bus',
       overnightStay: '',
       tripImg: undefined,
     },
@@ -88,10 +88,10 @@ const CreateCard = (props: any) => {
 
         <label>Тип туристической экскурсии:</label>
 
-        <select value="bus" {...register('tripType', { required: true })}>
-          <option value="bus">Туристический автобус</option>
-          <option value="walk">Пешая прогулка</option>
-          <option value="water">Водный транспорт</option>
+        <select {...register('tripType', { required: true })}>
+          <option value="Tourist bus">Туристический автобус</option>
+          <option value="Walking tour">Пешая прогулка</option>
+          <option value="Water transport">Водный транспорт</option>
         </select>
 
         <label>с ночевкой</label>
