@@ -1,5 +1,5 @@
 import s from './Cards.module.css';
-import React, { Component } from 'react';
+import React from 'react';
 import Card, { CardProps } from './Card/Card';
 
 interface CardsProps {
@@ -8,14 +8,14 @@ interface CardsProps {
 
 const Cards = (props: CardsProps) => {
   const { cards } = props;
-
+  console.log(props);
   return (
     <div className={s.cards}>
       {cards.map((card) => (
         <Card
           id={card.id}
           key={card.id}
-          name={card.name}
+          tripName={card.tripName}
           tripDate={card.tripDate}
           tripType={card.tripType}
           overnightStay={card.overnightStay}
@@ -27,4 +27,3 @@ const Cards = (props: CardsProps) => {
 };
 
 export default Cards;
-

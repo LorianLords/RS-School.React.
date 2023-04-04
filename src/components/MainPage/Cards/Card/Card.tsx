@@ -3,7 +3,7 @@ import s from '../Cards.module.css';
 
 export interface CardProps {
   id: number;
-  name: string;
+  tripName: string;
   tripDate: string;
   tripType: string;
   overnightStay: boolean;
@@ -11,12 +11,12 @@ export interface CardProps {
 }
 
 const Card = (props: CardProps) => {
-  const { name, tripDate, tripType, overnightStay, tripImg } = props;
+  const { tripName, tripDate, tripType, overnightStay, tripImg } = props;
 
   return (
     <div className={s.card}>
-      <img src={tripImg} alt={name} />
-      <h2>{name}</h2>
+      <img src={tripImg} alt={tripName} />
+      <h2>{tripName}</h2>
       <h3>{tripType}</h3>
       <p>date of trip: {tripDate}</p>
       <p>overnight stay is{!overnightStay ? 'not' : ''} include</p>

@@ -1,110 +1,126 @@
-import React, { Component, RefObject } from 'react';
+import React, { useState } from 'react';
 import s from './CreateCard.module.css';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { CardProps } from '../MainPage/Cards/Card/Card';
+import defaultImg from '../../assets/react.svg';
 
-class CreateCard extends Component<any, any> {
-  private input: RefObject<HTMLInputElement> = React.createRef();
-  private date: RefObject<HTMLInputElement> = React.createRef();
-  private typeOfTrip: RefObject<HTMLSelectElement> = React.createRef();
-  private withNight: RefObject<HTMLInputElement> = React.createRef();
-  private withoutNight: RefObject<HTMLInputElement> = React.createRef();
-  private tripImg: RefObject<HTMLInputElement> = React.createRef();
+type FormValues = {
+  tripName: string;
+  tripDate: string;
+  tripType: string;
+  overnightStay: string;
+  tripImg: FileList;
+};
 
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      selectedOption: 'withNight',
-      fileName: 'empty',
-    };
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleRadioChange = this.handleRadioChange.bind(this);
-  }
+const CreateCard = (props: any) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({
+    defaultValues: {
+      tripName: 'welcome to paris',
+      tripDate: '',
+      tripType: '',
+      overnightStay: '',
+      tripImg: undefined,
+    },
+  });
+  const [fileName, setFileName] = useState('empty');
 
-  handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const file = this.tripImg.current?.files?.[0];
+  const onSubmit: SubmitHandler<FormValues> = (event) => {
+    console.log(event);
+    const file = event.tripImg?.[0];
     let imageUrl = null;
     if (file) {
       imageUrl = URL.createObjectURL(file);
     }
     const card = {
       id: 7,
-      name: this.input.current?.value,
-      tripDate: this.date.current?.value,
-      tripType: this.typeOfTrip.current?.value,
-      overnightStay: this.withNight.current?.checked,
+      ...event,
+      overnightStay: Boolean(event.overnightStay),
       tripImg: imageUrl,
     };
-    this.props.updateCardList(card);
-  }
 
-  handleRadioChange(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ selectedOption: event.target.value });
-  }
-  render() {
-    return (
-      <div className={s.window}>
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Название путевки:
-            <input type="text" ref={this.input} className={s.name} />
-          </label>
-          <br />
-          <label htmlFor="">
-            Дата начала: <br />
-            <input type={'date'} min={'01.06.2023'} ref={this.date} />
-          </label>
-          <br />
-          <label htmlFor="">
-            Тип туристической экскурсии:
-            <select ref={this.typeOfTrip}>
-              <option value="bus">Туристический автобус</option>
-              <option value="walk">Пешая прогулка</option>
-              <option value="water">Водный транспорт</option>
-            </select>
-          </label>
-          <div>
-            <input
-              type="radio"
-              name="withNight"
-              value="withNight"
-              checked={'withNight' === this.state.selectedOption}
-              ref={this.withNight}
-              id="withNight"
-              onChange={this.handleRadioChange}
-            />
+    props.updateCardList(card);
+  };
 
-            <label htmlFor="with">с ночевкой</label>
-            <input
-              type="radio"
-              name="withoutNight"
-              value="withoutNight"
-              checked={'withoutNight' === this.state.selectedOption}
-              ref={this.withoutNight}
-              id="withoutNight"
-              onChange={this.handleRadioChange}
-            />
-            <label htmlFor="without">без ночевки</label>
-          </div>
-          <div>
-            <label className={s.label}>
-              <input
-                className={s.fileInput}
-                type="file"
-                name="tripFile"
-                accept="image/*"
-                ref={this.tripImg}
-              />
-              <span className={s.inputFileBtn}>Выберите файл</span>
-              <span className={s.inputFileText}>пусто</span>
-            </label>
-          </div>
+  /*  const Input = ({label, register, required}) => (
+    <>
+      <label>{label}</label>
+      <input {...register(label, {required})} />
+    </>
+  )*/
 
-          <input type="submit" value={'Создать'} />
-        </form>
-      </div>
-    );
-  }
-}
+  /*const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedOption(event.target.value);
+  };*/
+  return (
+    <div className={s.window}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <label> Название путевки:</label>
+        <input
+          type="text"
+          className={s.name}
+          {...register('tripName', {
+            required: {
+              value: true,
+              message: 'Field is not complete',
+            },
+            minLength: { value: 4, message: 'Min length is 4 symbols' },
+            maxLength: 30,
+          })}
+        />
+        <p>{errors.tripName?.message}</p>
+
+        <label>Дата начала:</label>
+        <input
+          type={'date'}
+          {...register('tripDate', {
+            required: {
+              value: true,
+              message: 'Field is not complete',
+            },
+            maxLength: 20,
+          })}
+        />
+        <p>{errors.tripDate?.message}</p>
+
+        <label>Тип туристической экскурсии:</label>
+
+        <select value="bus" {...register('tripType', { required: true })}>
+          <option value="bus">Туристический автобус</option>
+          <option value="walk">Пешая прогулка</option>
+          <option value="water">Водный транспорт</option>
+        </select>
+
+        <label>с ночевкой</label>
+        <input
+          type="radio"
+          value={'true'}
+          {...register('overnightStay', { required: true })}
+          id="withNight"
+        />
+        <label>без ночевки</label>
+        <input
+          type="radio"
+          value={'false'}
+          {...register('overnightStay', { required: true })}
+          id="withoutNight"
+        />
+
+        <div>
+          <label className={s.label}>
+            <input className={s.fileInput} type="file" {...register('tripImg')} accept="image/*" />
+            <span className={s.inputFileBtn}>Выберите файл</span>
+            <span className={s.inputFileText}>пусто</span>
+          </label>
+        </div>
+
+        <input type="submit" value={'Создать'} />
+      </form>
+    </div>
+  );
+};
 
 export default CreateCard;

@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import Cards from './Cards/Cards';
 import CreateCard from '../CreateCard/CreateCard';
 import s from './MainPage.module.css';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 import { CardProps } from './Cards/Card/Card';
 
-const CardList = [
+const CardListDefault = [
   {
     id: 1,
-    name: 'Trip to the eiffel tower',
+    tripName: 'Trip to the eiffel tower',
     tripDate: '27.04.2023',
     tripType: 'Tourist bus',
     overnightStay: true,
@@ -16,7 +16,7 @@ const CardList = [
   },
   {
     id: 2,
-    name: 'History of Brooklyn',
+    tripName: 'History of Brooklyn',
     tripDate: '25.04.2023',
     tripType: 'Walking tour',
     overnightStay: false,
@@ -25,7 +25,7 @@ const CardList = [
   },
   {
     id: 3,
-    name: 'Museum of Nebraska ',
+    tripName: 'Museum of Nebraska ',
     tripDate: '17.06.2023',
     tripType: 'Tourist bus',
     overnightStay: false,
@@ -33,7 +33,7 @@ const CardList = [
   },
   {
     id: 4,
-    name: 'Hudson river. Beyond New-york City',
+    tripName: 'Hudson river. Beyond New-york City',
     tripDate: '27.04.2023',
     tripType: 'Water Transport',
     overnightStay: false,
@@ -41,7 +41,7 @@ const CardList = [
   },
   {
     id: 5,
-    name: 'Washington D.C. is a Capital',
+    tripName: 'Washington D.C. is a Capital',
     tripDate: '06.07.2023',
     tripType: 'Tourist bus',
     overnightStay: true,
@@ -49,50 +49,55 @@ const CardList = [
   },
 ];
 
-class MainPage extends Component<any, any> {
-  constructor(props: any) {
+const MainPage = () => {
+  /*constructor(props: any) {
     super(props);
     this.state = {
       isOpen: false,
       cardList: CardList,
     };
     this.updateCardList = this.updateCardList.bind(this);
-  }
+  }*/
+  const [isOpen, setIsOpen] = useState(false);
+  const [cardList, setCardList] = useState<CardProps[]>(CardListDefault);
+  useEffect(() => {});
 
-  updateCardList(card: CardProps) {
-    this.setState({ cardList: [this.state.cardList.unshift(card)] });
-  }
-  render() {
-    return (
-      <div className={s.main}>
-        <h1>Welcome to our main page</h1>
-        <CreateCard updateCardList={this.updateCardList} />
-        {!this.state.isOpen ? (
-          <NavLink to={`createcard/`}>
-            <button
-              onClick={() => {
-                this.setState({ isOpen: true });
-              }}
-            >
-              Create new Card
-            </button>
-          </NavLink>
-        ) : (
+  const updateCardList = (card: CardProps) => {
+    setCardList((prev) => [...prev, card]);
+  };
+
+  return (
+    <div className={s.main}>
+      <h1>Welcome to our main page</h1>
+      {/* <Outlet context={updateCardList} />*/}
+      {!isOpen ? (
+        <NavLink to={`createcard/`}>
+          <button
+            onClick={() => {
+              setIsOpen(true);
+            }}
+          >
+            Create new Card
+          </button>
+        </NavLink>
+      ) : (
+        <>
+          <CreateCard updateCardList={updateCardList} />
           <NavLink to={`./`}>
             <button
               onClick={() => {
-                this.setState({ isOpen: false });
+                setIsOpen(false);
               }}
             >
               Close Window
             </button>
           </NavLink>
-        )}
+        </>
+      )}
 
-        <Cards cards={CardList} />
-      </div>
-    );
-  }
-}
+      <Cards cards={cardList} />
+    </div>
+  );
+};
 
 export default MainPage;
