@@ -44,12 +44,13 @@ const Header = () => {
                 id="search"
                 placeholder="Search"
                 type="search"
+                className={s.searchInput}
                 name="q"
                 value={value}
                 ref={inputRef}
                 onChange={handleChange}
               />
-              <button type={'submit'}></button>
+              <button className={s.searchBtn} type={'submit'}></button>
             </form>
           </div>
         </div>

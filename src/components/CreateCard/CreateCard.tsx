@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { ChangeEventHandler, useState } from 'react';
 import s from './CreateCard.module.css';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { CardProps } from '../MainPage/Cards/Card/Card';
-import defaultImg from '../../assets/react.svg';
+
+import Input from './InputField/Input';
 
 type FormValues = {
   tripName: string;
@@ -19,105 +19,128 @@ const CreateCard = (props: any) => {
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
-      tripName: 'welcome to paris',
+      tripName: '',
       tripDate: '',
       tripType: 'Tourist bus',
       overnightStay: '',
       tripImg: undefined,
     },
   });
-  const [fileName, setFileName] = useState('empty');
+  const [fileName, setFileName] = useState('');
 
-  const onSubmit: SubmitHandler<FormValues> = (event) => {
-    console.log(event);
-    const file = event.tripImg?.[0];
+  const onSubmit: SubmitHandler<FormValues> = (data, event) => {
+    const file = data.tripImg?.[0];
     let imageUrl = null;
     if (file) {
       imageUrl = URL.createObjectURL(file);
     }
     const card = {
       id: 7,
-      ...event,
-      overnightStay: Boolean(event.overnightStay),
+      ...data,
+      overnightStay: Boolean(data.overnightStay),
       tripImg: imageUrl,
     };
-
     props.updateCardList(card);
+    event?.target.reset();
+    setFileName('');
   };
 
-  /*  const Input = ({label, register, required}) => (
-    <>
-      <label>{label}</label>
-      <input {...register(label, {required})} />
-    </>
-  )*/
+  const handleFileChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    debugger;
+    const fileName = event.currentTarget.files?.[0]?.name || '';
+    console.log(errors.tripName);
+    setFileName(fileName);
+  };
 
-  /*const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedOption(event.target.value);
-  };*/
   return (
     <div className={s.window}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label> Название путевки:</label>
-        <input
-          type="text"
-          className={s.name}
-          {...register('tripName', {
-            required: {
-              value: true,
-              message: 'Field is not complete',
-            },
-            minLength: { value: 4, message: 'Min length is 4 symbols' },
-            maxLength: 30,
-          })}
+        <h2>Create new Card</h2>
+        <Input
+          type={'text'}
+          name={'tripName'}
+          error={errors.tripName}
+          styles={s.name}
+          register={register}
+          required={{ value: true, message: 'required input field' }}
+          options={{
+            maxLength: { value: 20, message: 'Max length is 20 symbols' },
+          }}
+          label={'Название путевки:'}
         />
-        <p>{errors.tripName?.message}</p>
 
-        <label>Дата начала:</label>
-        <input
+        <Input
           type={'date'}
-          {...register('tripDate', {
-            required: {
-              value: true,
-              message: 'Field is not complete',
+          name={'tripDate'}
+          error={errors.tripDate}
+          styles={s.name}
+          register={register}
+          required={{ value: true, message: 'required input field' }}
+          options={{
+            pattern: {
+              value: /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/,
+              message: 'Date of Birth must be a valid date in the format YYYY-MM-DD',
             },
-            maxLength: 20,
-          })}
+            min: { value: '2023-03-01', message: 'Date of trip must be later than 2023-03-01' },
+            max: { value: '2023-12-31', message: 'Date of trip must be earlier than 2023-12-31' },
+          }}
+          label={'Дата начала:'}
         />
-        <p>{errors.tripDate?.message}</p>
 
         <label>Тип туристической экскурсии:</label>
-
-        <select {...register('tripType', { required: true })}>
-          <option value="Tourist bus">Туристический автобус</option>
-          <option value="Walking tour">Пешая прогулка</option>
-          <option value="Water transport">Водный транспорт</option>
-        </select>
-
-        <label>с ночевкой</label>
-        <input
-          type="radio"
-          value={'true'}
-          {...register('overnightStay', { required: true })}
-          id="withNight"
-        />
-        <label>без ночевки</label>
-        <input
-          type="radio"
-          value={'false'}
-          {...register('overnightStay', { required: true })}
-          id="withoutNight"
-        />
+        <div className={s.typeSelect}>
+          <select
+            {...register('tripType', {
+              required: {
+                value: true,
+                message: 'Field is not complete',
+              },
+            })}
+          >
+            <option value="Tourist bus">Туристический автобус</option>
+            <option value="Walking tour">Пешая прогулка</option>
+            <option value="Water transport">Водный транспорт</option>
+          </select>
+          <span className={s.focus}></span>
+        </div>
+        <p>{errors.tripType?.message}</p>
 
         <div>
-          <label className={s.label}>
-            <input className={s.fileInput} type="file" {...register('tripImg')} accept="image/*" />
-            <span className={s.inputFileBtn}>Выберите файл</span>
-            <span className={s.inputFileText}>пусто</span>
+          <label className={s.formControl}>
+            <input
+              type="radio"
+              value={'true'}
+              {...register('overnightStay', { required: true })}
+              id="withNight"
+            />
+            С ночевкой
+          </label>
+          <label className={s.formControl}>
+            <input
+              type="radio"
+              value={'false'}
+              {...register('overnightStay', { required: true })}
+              id="withoutNight"
+            />
+            Без ночевки
           </label>
         </div>
 
-        <input type="submit" value={'Создать'} />
+        <div>
+          <label className={s.label}>
+            <input
+              className={s.fileInput}
+              type="file"
+              {...register('tripImg')}
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+            <span className={s.inputFileBtn}>Выберите файл</span>
+            <span className={s.inputFileText}>{fileName}</span>
+          </label>
+        </div>
+
+        <input className={s.submit} type="submit" value={'Создать'} />
       </form>
     </div>
   );

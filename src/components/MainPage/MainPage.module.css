@@ -2,3 +2,8 @@
   display: grid;
   place-items: center;
 }
+
+.windowBtn{
+  padding: 15px;
+  margin-top: 5px;
+}

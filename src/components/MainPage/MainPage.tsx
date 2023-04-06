@@ -2,7 +2,7 @@ import React, { Component, useEffect, useState } from 'react';
 import Cards from './Cards/Cards';
 import CreateCard from '../CreateCard/CreateCard';
 import s from './MainPage.module.css';
-import { NavLink, Outlet } from 'react-router-dom';
+import { Link, NavLink, Outlet, redirect, useNavigate } from 'react-router-dom';
 import { CardProps } from './Cards/Card/Card';
 
 const CardListDefault = [
@@ -50,19 +50,17 @@ const CardListDefault = [
 ];
 
 const MainPage = () => {
-  /*constructor(props: any) {
-    super(props);
-    this.state = {
-      isOpen: false,
-      cardList: CardList,
-    };
-    this.updateCardList = this.updateCardList.bind(this);
-  }*/
   const [isOpen, setIsOpen] = useState(false);
   const [cardList, setCardList] = useState<CardProps[]>(CardListDefault);
-  useEffect(() => {});
+  const [windowUrl, setWindowUrl] = useState('./');
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigate(windowUrl);
+    console.log(1);
+  }, []);
 
   const updateCardList = (card: CardProps) => {
+    console.log(card);
     setCardList((prev) => [...prev, card]);
   };
 
@@ -70,31 +68,20 @@ const MainPage = () => {
     <div className={s.main}>
       <h1>Welcome to our main page</h1>
       {/* <Outlet context={updateCardList} />*/}
-      {!isOpen ? (
-        <NavLink to={`createcard/`}>
-          <button
-            onClick={() => {
-              setIsOpen(true);
-            }}
-          >
-            Create new Card
-          </button>
-        </NavLink>
-      ) : (
-        <>
-          <CreateCard updateCardList={updateCardList} />
-          <NavLink to={`./`}>
-            <button
-              onClick={() => {
-                setIsOpen(false);
-              }}
-            >
-              Close Window
-            </button>
-          </NavLink>
-        </>
-      )}
-
+      {/*{!isOpen ? (*/}
+      {isOpen ? <CreateCard updateCardList={updateCardList} /> : ''}
+      <Link to={windowUrl === './' ? 'createcard/' : './'}>
+        <button
+          className={s.windowBtn}
+          onClick={() => {
+            console.log(windowUrl === './' ? 'createcard/' : './');
+            setWindowUrl(windowUrl === './' ? 'createcard/' : './');
+            setIsOpen((current) => !current);
+          }}
+        >
+          {isOpen ? 'Close Window' : 'Create new Card'}
+        </button>
+      </Link>
       <Cards cards={cardList} />
     </div>
   );
