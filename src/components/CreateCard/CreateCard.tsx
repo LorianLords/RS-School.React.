@@ -58,6 +58,7 @@ const CreateCard = (props: any) => {
         <h2>Create new Card</h2>
         <Input
           type={'text'}
+          testId={'nameTest'}
           name={'tripName'}
           error={errors.tripName}
           styles={s.name}
@@ -72,6 +73,7 @@ const CreateCard = (props: any) => {
         <Input
           type={'date'}
           name={'tripDate'}
+          testId={'dateTest'}
           error={errors.tripDate}
           styles={s.name}
           register={register}
@@ -90,6 +92,7 @@ const CreateCard = (props: any) => {
         <label>Тип туристической экскурсии:</label>
         <div className={s.typeSelect}>
           <select
+            data-testid={'selectTest'}
             {...register('tripType', {
               required: {
                 value: true,
@@ -97,7 +100,9 @@ const CreateCard = (props: any) => {
               },
             })}
           >
-            <option value="Tourist bus">Туристический автобус</option>
+            <option data-testid={'bus-option'} value="Tourist bus">
+              Туристический автобус
+            </option>
             <option value="Walking tour">Пешая прогулка</option>
             <option value="Water transport">Водный транспорт</option>
           </select>
@@ -109,6 +114,7 @@ const CreateCard = (props: any) => {
           <label className={s.formControl}>
             <input
               type="radio"
+              data-testid={'radioTestWith'}
               value={'true'}
               {...register('overnightStay', { required: true })}
               id="withNight"
@@ -118,6 +124,7 @@ const CreateCard = (props: any) => {
           <label className={s.formControl}>
             <input
               type="radio"
+              data-testid={'radioTestWithout'}
               value={'false'}
               {...register('overnightStay', { required: true })}
               id="withoutNight"
@@ -131,6 +138,7 @@ const CreateCard = (props: any) => {
             <input
               className={s.fileInput}
               type="file"
+              data-testid={'input-file'}
               {...register('tripImg')}
               accept="image/*"
               onChange={handleFileChange}
@@ -140,7 +148,7 @@ const CreateCard = (props: any) => {
           </label>
         </div>
 
-        <input className={s.submit} type="submit" value={'Создать'} />
+        <input className={s.submit} data-testid={'submitTest'} type="submit" value={'Создать'} />
       </form>
     </div>
   );

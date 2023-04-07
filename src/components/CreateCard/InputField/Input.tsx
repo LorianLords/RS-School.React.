@@ -4,6 +4,7 @@ import { FieldError, RegisterOptions, UseFormRegister, ValidationRule } from 're
 
 interface InputType {
   name: string;
+  testId: string;
   type: string;
   label: string;
   styles: string;
@@ -30,12 +31,23 @@ interface InputType {
   maxLengthText?: string;
   error: FieldError | undefined;
 }
-const Input = ({ name, error, type, label, styles, register, required, options }: InputType) => (
+const Input = ({
+  name,
+  testId,
+  error,
+  type,
+  label,
+  styles,
+  register,
+  required,
+  options,
+}: InputType) => (
   <div className={s.inputField}>
     <label className={s.label}>{label}</label>
     <input
       placeholder={'Name of trip'}
       type={type}
+      data-testid={testId}
       className={styles}
       {...register(name, {
         required: required,

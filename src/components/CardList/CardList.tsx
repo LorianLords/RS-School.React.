@@ -6,7 +6,7 @@ interface CardsProps {
   cards: CardProps[];
 }
 
-const Cards = (props: CardsProps) => {
+const CardList = (props: CardsProps) => {
   const { cards } = props;
   return (
     <div className={s.cards}>
@@ -25,4 +25,4 @@ const Cards = (props: CardsProps) => {
   );
 };
 
-export default Cards;
+export default CardList;

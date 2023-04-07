@@ -14,7 +14,7 @@ const Card = (props: CardProps) => {
   const { tripName, tripDate, tripType, overnightStay, tripImg } = props;
 
   return (
-    <div className={s.card}>
+    <div data-testid={tripName} className={s.card}>
       <img src={tripImg} alt={tripName} />
       <h2>{tripName}</h2>
       <h3>{tripType}</h3>

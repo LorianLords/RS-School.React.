@@ -1,11 +1,5 @@
-import React, {
-
-  Component,
-
-  RefObject,
-} from 'react';
+import React, { Component, RefObject } from 'react';
 import s from './CreateCard.module.css';
-import { useOutletContext, NavLink } from 'react-router-dom';
 
 interface FormState {
   id?: number;
