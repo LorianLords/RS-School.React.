@@ -89,6 +89,8 @@ const CreateCard = (props: any) => {
           label={'Дата начала:'}
         />
 
+
+
         <label>Тип туристической экскурсии:</label>
         <div className={s.typeSelect}>
           <select

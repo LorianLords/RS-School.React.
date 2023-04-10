@@ -18,6 +18,11 @@ interface RenderRouteWithOutletContextProps<T = any> {
   children: ReactNode;
 }
 
+vi.mock('react-router-dom', async () => ({
+  ...((await vi.importActual('react-router-dom')) as any),
+  useNavigate: () => vi.fn(),
+}));
+
 export const RenderRouteWithOutletContext = <T,>({
   context,
   children,
@@ -40,11 +45,6 @@ const mockOutletContextData: any = {
 afterEach(() => {
   cleanup();
 });
-
-/*jest.mock('react-router-dom', () => ({
-  ...(jest.requireActual('react-router-dom') as any),
-  useNavigate: () => (jest.fn())
-}));*/
 
 describe('App', () => {
   it('Renders hello world', () => {

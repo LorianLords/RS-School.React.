@@ -2,7 +2,7 @@ import React, { Component, useEffect, useState } from 'react';
 import CardList from '../../components/CardList/CardList';
 import CreateCard from '../../components/CreateCard/CreateCard';
 import s from './MainPage.module.css';
-import { Link, NavLink, Outlet, redirect, useNavigate } from 'react-router-dom';
+import { Link, NavLink, redirect, useNavigate } from 'react-router-dom';
 import { CardProps } from '../../components/CardList/Card/Card';
 import { CardListDefault } from '../../components/CardList/TripsData';
 
@@ -11,10 +11,9 @@ const MainPage = () => {
   const [cardList, setCardList] = useState<CardProps[]>(CardListDefault);
   const [windowUrl, setWindowUrl] = useState('./');
   const navigate = useNavigate();
-  /* useEffect(() => {
+  useEffect(() => {
     navigate(windowUrl);
   }, []);
-*/
   const updateCardList = (card: CardProps) => {
     console.log(card);
     setCardList((prev) => [...prev, card]);

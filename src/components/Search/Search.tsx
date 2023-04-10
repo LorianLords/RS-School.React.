@@ -36,6 +36,7 @@ const Search = () => {
           id="search"
           placeholder="Search"
           type="search"
+          data-testid={'inputSearch'}
           className={s.searchInput}
           name="q"
           value={value}

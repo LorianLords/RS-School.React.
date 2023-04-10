@@ -1,7 +1,7 @@
 import './Header.module.css';
 import React from 'react';
 import s from './Header.module.css';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import Search from '../Search/Search';
 
 const Header = () => {
@@ -13,12 +13,12 @@ const Header = () => {
           <Search />
         </div>
         <div className={s.headerItems}>
-          <Link to={'/main'} className={s.headerItem}>
+          <NavLink to={'/main'} className={s.headerItem}>
             Main
-          </Link>
-          <Link to={'/aboutus'} className={s.headerItem}>
+          </NavLink>
+          <NavLink to={'/aboutus'} className={s.headerItem}>
             About Us
-          </Link>
+          </NavLink>
           <div className={s.headerItem}>Cards</div>
         </div>
       </div>
