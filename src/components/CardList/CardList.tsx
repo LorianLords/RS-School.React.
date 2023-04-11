@@ -14,15 +14,25 @@ const CardList = (props: CardsProps) => {
         <Card
           id={card.id}
           key={card.id}
-          tripName={card.tripName}
-          tripDate={card.tripDate}
-          tripType={card.tripType}
-          overnightStay={card.overnightStay}
-          tripImg={card.tripImg}
+          name={card.name}
+          created={card.created}
+          gender={card.gender}
+          species={card.species}
+          status={card.status}
+          image={card.image}
         />
       ))}
     </div>
   );
 };
-
+/*
+<Card
+  id={card.id}
+  key={card.id}
+  tripName={card.tripName}
+  tripDate={card.tripDate}
+  tripType={card.tripType}
+  overnightStay={card.overnightStay}
+  tripImg={card.tripImg}
+/>*/
 export default CardList;

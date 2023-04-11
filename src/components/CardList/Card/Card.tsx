@@ -3,23 +3,33 @@ import s from '../Cards.module.css';
 
 export interface CardProps {
   id: number;
+  name: string;
+  gender: string;
+  species: string;
+  created: string;
+  status: string;
+  image: string;
+
+  /* id: number;
   tripName: string;
   tripDate: string;
   tripType: string;
   overnightStay: boolean;
-  tripImg: string;
+  tripImg: string;*/
 }
 
 const Card = (props: CardProps) => {
-  const { tripName, tripDate, tripType, overnightStay, tripImg } = props;
+  const { id, name, gender, created, species, status, image } = props;
 
   return (
-    <div data-testid={tripName} className={s.card}>
-      <img src={tripImg} alt={tripName} />
-      <h2>{tripName}</h2>
-      <h3>{tripType}</h3>
-      <p>date of trip: {tripDate}</p>
-      <p>overnight stay is{!overnightStay ? 'not' : ''} include</p>
+    <div id={id.toString()} data-testid={name} className={s.card}>
+      <img src={image} alt={name} />
+      <h2>{name}</h2>
+      <h3>
+        {gender} | {species}
+      </h3>
+      <p>date of create: {created}</p>
+      <p>{status}</p>
     </div>
   );
 };
