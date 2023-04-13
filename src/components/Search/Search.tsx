@@ -24,9 +24,7 @@ const Search = () => {
     setValue(e.target.value);
   };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // предотвращаем перезагрузку страницы
-    /*  const input = event.currentTarget.search.value; // получаем доступ к полю ввода
-    localStorage.setItem('search', input);*/
+    event.preventDefault();
   };
 
   return (

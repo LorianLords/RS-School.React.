@@ -42,22 +42,14 @@ const mockOutletContextData: any = {
   foo: 'bar',
 };
 
-afterEach(() => {
-  cleanup();
-});
-
 describe('App', () => {
-  it('Renders hello world', () => {
+  it('Renders app wrapper inside App', () => {
     render(
       <RenderRouteWithOutletContext context={mockOutletContextData}>
         <App />
       </RenderRouteWithOutletContext>
     );
-    expect(
-      screen.getByRole('heading', {
-        level: 1,
-      })
-    ).toHaveTextContent('Hello World');
+    expect(screen.getByTestId('appWrapper')).toBeInTheDocument();
   });
   it('Route to the error page', () => {
     const router = createMemoryRouter(routesConfig, {

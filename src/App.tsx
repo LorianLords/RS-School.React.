@@ -3,16 +3,15 @@ import { Outlet, Router } from 'react-router-dom';
 import './App.css';
 import Header from './components/Header/Header';
 
-function App() {
+const App = () => {
   return (
     <div className="App">
       <Header />
-      <h1>Hello World</h1>
-      <div className={'app-wrapper-content'}>
+      <div data-testid={'appWrapper'} className={'app-wrapper-content'}>
         <Outlet />
       </div>
     </div>
   );
-}
+};
 
 export default App;
