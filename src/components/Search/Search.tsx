@@ -1,14 +1,15 @@
 import s from '../Header/Header.module.css';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { IuseState, MyContext } from '../../App';
 
 const Search = () => {
-  const [value, setValue] = useState<string>('');
   const inputRef = useRef<HTMLInputElement | null>(null);
-
+  const { setValue } = useContext(MyContext) as IuseState;
+  const [inputValue, setInputValue] = useState('');
   useEffect(() => {
     window.addEventListener('beforeunload', componentCleanup);
     const storageValue = localStorage.getItem('search');
-    setValue(storageValue || '');
+    setInputValue(storageValue || '');
 
     return () => {
       window.removeEventListener('beforeunload', componentCleanup);
@@ -21,10 +22,11 @@ const Search = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
+    setInputValue(e.target.value);
   };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setValue(event.currentTarget['search'].value);
   };
 
   return (
@@ -37,7 +39,7 @@ const Search = () => {
           data-testid={'inputSearch'}
           className={s.searchInput}
           name="q"
-          value={value}
+          value={inputValue}
           ref={inputRef}
           onChange={handleChange}
         />

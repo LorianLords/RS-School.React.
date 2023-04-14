@@ -2,12 +2,15 @@ import s from './Cards.module.css';
 import React from 'react';
 import Card, { CardProps } from './Card/Card';
 
-interface CardsProps {
-  cards: CardProps[];
-}
+type CardsProps = {
+  cards: CardProps[] | undefined;
+};
 
 const CardList = (props: CardsProps) => {
   const { cards } = props;
+  if (!cards) return <div></div>;
+  console.log('CardList');
+  console.log(cards);
   return (
     <div className={s.cards}>
       {cards.map((card) => (
@@ -35,4 +38,4 @@ const CardList = (props: CardsProps) => {
   overnightStay={card.overnightStay}
   tripImg={card.tripImg}
 />*/
-export default CardList;
+export default React.memo(CardList);

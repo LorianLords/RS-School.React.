@@ -17,7 +17,7 @@
   grid-template-columns: 2fr 10fr;
 }
 
-.app-wrapper-content{
+.App-wrapper-content{
   grid-area: cont;
   background-color: seagreen;
 
