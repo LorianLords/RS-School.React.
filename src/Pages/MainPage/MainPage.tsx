@@ -1,22 +1,16 @@
-import React, {
-  ChangeEvent,
-  ChangeEventHandler,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import CardList from '../../components/CardList/CardList';
 import CreateCard from '../../components/CreateCard/CreateCard';
 import s from './MainPage.module.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { CardProps } from '../../components/CardList/Card/Card';
-import { CardListDefault } from '../../components/CardList/TripsData';
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosProgressEvent } from 'axios';
 import Pagination from '../../components/Pagination/Pagination';
 import { IuseState, MyContext } from '../../App';
+import ModalWindow from '../../components/Modal/Modal';
+import Loader from '../../components/Loader/Loader';
 
-type RickAndMortyCardProps = {
+export type RickAndMortyCardProps = {
   id: number;
   name: string;
   gender: string;
@@ -26,7 +20,7 @@ type RickAndMortyCardProps = {
   image: string;
   episode?: [];
   location?: { name: string; url: string };
-  origin?: { name: string; url: string };
+  origin?: { name: string; url?: string };
   type?: string;
   url?: string;
 };
@@ -39,7 +33,15 @@ const getData = (
   const options = value && `&name=${value}`;
 
   return axios
-    .get(baseUrl + `?page=${pageNumber}` + options)
+    .get(baseUrl + `?page=${pageNumber}` + options, {
+      onDownloadProgress: function (progressEvent: AxiosProgressEvent) {
+        console.log({ progressEvent });
+        /* if (progressEvent.total) {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          console.log(percentCompleted + '%');
+        }*/
+      },
+    })
     .then((resp) => {
       setError('');
       return resp.data;
@@ -59,6 +61,8 @@ const baseUrl = './';
 const MainPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenDescription, setIsOpenDescription] = useState(false);
+  const [cardState, setCardState] = useState({});
   const [error, setError] = useState<string | undefined>('');
   const { value, setValue } = useContext(MyContext) as IuseState;
   const [selectValue, setSelectValue] = useState<string>('default');
@@ -68,25 +72,6 @@ const MainPage = () => {
   const [currentPage, setCurrentPage] = useState<number | undefined>(1);
   const link = windowUrl === baseUrl ? 'createcard/' : './';
   const buttonText = isOpen ? 'Close Window' : 'Create new Card';
-  /*useEffect(() => {
-    let updated = false;
-    setIsLoading(true);
-    getData(setIsLoading, setError, currentPage).then((data) => {
-      if (!updated) {
-        setTotalCount(data.info.pages);
-        const sortData = data.results.sort((a: RickAndMortyCardProps, b: RickAndMortyCardProps) =>
-          a.name > b.name ? -1 : 1
-        );
-        console.log('111');
-        console.log(sortData);
-        setCardList(sortData);
-        setIsLoading(false);
-      }
-    });
-    return () => {
-      updated = true;
-    };
-  }, []);*/
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -116,8 +101,10 @@ const MainPage = () => {
   }, []);
 
   const onCreateCard = () => {
-    setWindowUrl(windowUrl === baseUrl ? 'createcard/' : baseUrl);
-    setIsOpen((current) => !current);
+    /* setWindowUrl(windowUrl === baseUrl ? 'createcard/' : baseUrl);
+    setIsOpen((current) => !current);*/
+    document.body.classList.add('modalOpen');
+    setIsOpenDescription(true);
   };
 
   const Sorting = (selectValue = 'default', dataList: RickAndMortyCardProps[]) => {
@@ -132,13 +119,18 @@ const MainPage = () => {
   return (
     <div className={s.main}>
       <h1>Welcome to our main page</h1>
-      {isOpen && <CreateCard updateCardList={updateCardList} />}
+      {/*{isOpen && <CreateCard updateCardList={updateCardList} />}*/}
       <Link to={link}>
         <button className={s.windowBtn} onClick={onCreateCard}>
           {buttonText}
         </button>
       </Link>
-
+      {isOpenDescription && (
+        <ModalWindow
+          cardState={cardState as RickAndMortyCardProps}
+          setIsOpen={setIsOpenDescription}
+        />
+      )}
       <div className={s.paginatorWrapper}>
         <Pagination totalCount={totalCount} setCurrentPage={setCurrentPage} />
 
@@ -158,7 +150,13 @@ const MainPage = () => {
         </div>
       </div>
 
-      {error ? <p>{error}</p> : isLoading ? <p>Loading...</p> : <CardList cards={cardList} />}
+      {error ? (
+        <p>{error}</p>
+      ) : isLoading ? (
+        <Loader />
+      ) : (
+        <CardList cards={cardList} setIsOpen={setIsOpenDescription} setCardState={setCardState} />
+      )}
     </div>
   );
 };

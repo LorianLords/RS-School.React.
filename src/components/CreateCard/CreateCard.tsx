@@ -3,6 +3,7 @@ import s from './CreateCard.module.css';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import Input from './InputField/Input';
+import { CardProps } from '../CardList/Card/Card';
 
 type FormValues = {
   tripName: string;
@@ -12,7 +13,11 @@ type FormValues = {
   tripImg: FileList;
 };
 
-const CreateCard = (props: any) => {
+type CreateCardProps = {
+  updateCardList: (card: FormValues) => void;
+};
+
+const CreateCard = (props: CreateCardProps) => {
   const {
     register,
     handleSubmit,

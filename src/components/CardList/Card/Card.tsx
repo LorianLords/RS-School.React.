@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { MouseEventHandler, useState } from 'react';
 import s from '../Cards.module.css';
-import { format } from 'prettier';
 
 export type CardProps = {
   id: number;
@@ -10,27 +9,29 @@ export type CardProps = {
   created: string;
   status: string;
   image: string;
-
-  /* id: number;
-  tripName: string;
-  tripDate: string;
-  tripType: string;
-  overnightStay: boolean;
-  tripImg: string;*/
+  type?: string;
+  origin?: { name: string; url?: string };
 };
-
-const Card = (props: CardProps) => {
-  const { id, name, gender, created, species, status, image } = props;
+export type IProps = {
+  card: CardProps;
+  setIsOpen: React.Dispatch<boolean>;
+  setCardState: React.Dispatch<CardProps>;
+};
+const Card = ({ setIsOpen, setCardState, card }: IProps) => {
+  const { id, name, gender, created, species, status, image } = card;
+  const handleClick: MouseEventHandler<HTMLDivElement> = (e) => {
+    console.log(e.currentTarget.id);
+    document.body.classList.add('modalOpen');
+    setCardState(card);
+    setIsOpen(true);
+  };
   return (
-    <div id={id.toString()} data-testid={name} className={s.card}>
-      <img src={image} alt={name} />
+    <div id={id.toString()} data-testid={name} className={s.card} onClick={handleClick}>
+      <img src={image} alt={name} draggable={false} />
       <h2>{name}</h2>
       <h3>
         {gender} | {species}
       </h3>
-      <label>date of create:</label>
-      <p>{created.split('T')[0]}</p>
-      <p>{status}</p>
     </div>
   );
 };
