@@ -40,7 +40,16 @@
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-var-requires": "off",
         "react/jsx-uses-react": "off",
-        "react/react-in-jsx-scope": "off"
+        "react/react-in-jsx-scope": "off",
+        "no-restricted-imports": "off",
+        "@typescript-eslint/no-restricted-imports": [
+            "warn",
+            {
+                "name": "react-redux",
+                "importNames": ["useSelector", "useDispatch"],
+                "message": "Use typed hooks `useAppDispatch` and `useAppSelector` instead."
+            }
+        ]
     },
     "settings": {
         "react": {

@@ -9,6 +9,16 @@ import Pagination from '../../components/Pagination/Pagination';
 import { IuseState, MyContext } from '../../App';
 import ModalWindow from '../../components/Modal/Modal';
 import Loader from '../../components/Loader/Loader';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  selectCardList,
+  getCardsError,
+  getCardsStatus,
+  fetchCards,
+  getPagesNum,
+} from '../../Features/CardsSlice';
+import { AnyAction } from '@reduxjs/toolkit';
+import { useAppDispatch } from '../../hooks';
 
 export type RickAndMortyCardProps = {
   id: number;
@@ -59,11 +69,18 @@ const getData = (
 
 const baseUrl = './';
 const MainPage = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useAppDispatch();
+  const cards = useSelector(selectCardList);
+  console.log(1);
+  const status = useSelector(getCardsStatus);
+  const error = useSelector(getCardsError);
+  const pages = useSelector(getPagesNum);
+
+
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDescription, setIsOpenDescription] = useState(false);
   const [cardState, setCardState] = useState({});
-  const [error, setError] = useState<string | undefined>('');
+  //const [error, setError] = useState<string | undefined>('');
   const { value, setValue } = useContext(MyContext) as IuseState;
   const [selectValue, setSelectValue] = useState<string>('default');
   const [cardList, setCardList] = useState<RickAndMortyCardProps[]>([]);
@@ -78,23 +95,28 @@ const MainPage = () => {
     navigate(windowUrl);
   }, []);
 
-  useEffect(() => {
-    console.log('useEffect');
-    let updated = false; //useEffect в любом случае отправит 2 раза запрос а мы просто избегаем 2 присвоения данных от запроса
+  /*useEffect(() => {
     setIsLoading(true);
     getData(setError, currentPage, value).then((data) => {
-      if (!updated) {
-        const sortData = Sorting(selectValue, data.results);
-        setTotalCount(data.info.pages);
-        setCardList(sortData);
-        setIsLoading(false);
-      }
+      const sortData = Sorting(selectValue, data.results);
+      setTotalCount(data.info.pages);
+      setCardList(sortData);
+      setIsLoading(false);
     });
+  }, [currentPage, value, selectValue]);*/
 
-    return () => {
-      updated = true;
-    };
-  }, [currentPage, value, selectValue]);
+  useEffect(() => {
+    console.log('useEffect');
+    console.log(status);
+    if (status === 'idle') {
+      dispatch(fetchCards(currentPage || 1) as unknown as AnyAction);
+    }
+    if (status === 'succeeded') {
+      const sortData = Sorting(selectValue, cards);
+      setTotalCount(pages);
+      setCardList(sortData);
+    }
+  }, [status, dispatch, currentPage]);
 
   const updateCardList = useCallback((card: CardProps) => {
     setCardList((prev) => [...prev, card]);
@@ -150,13 +172,7 @@ const MainPage = () => {
         </div>
       </div>
 
-      {error ? (
-        <p>{error}</p>
-      ) : isLoading ? (
-        <Loader />
-      ) : (
-        <CardList cards={cardList} setIsOpen={setIsOpenDescription} setCardState={setCardState} />
-      )}
+      <CardList setIsOpen={setIsOpenDescription} setCardState={setCardState} />
     </div>
   );
 };

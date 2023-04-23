@@ -2,14 +2,8 @@ import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import Header from './Header';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { MemoryRouter, Outlet, Route, Routes } from 'react-router-dom';
-
-/*const localStorageMock = (function () {
-  type Store  = {
-    [key: string]: string;
-  };
-  let store: Store = {};*/
 
 interface RenderRouteWithOutletContextProps<T = any> {
   children: ReactNode;
@@ -27,10 +21,22 @@ export const RenderRouteWithOutletContext = <T,>({
   );
 };
 
-const localStorageMock = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  clear: vi.fn(),
+export interface IuseState {
+  value: string;
+  setValue: React.Dispatch<string>;
+}
+const RenderHeader = () => {
+  //const setStateMock = vi.fn();
+  // const useStateMock = (useState) => ([useState, setStateMock];
+  const [value, setValue] = useState('hello');
+  const UserContext = React.createContext<IuseState | null>({ setValue });
+  return render(
+    <RenderRouteWithOutletContext>
+      <UserContext.Provider value={{ value, setValue }}>
+        <Header />
+      </UserContext.Provider>
+    </RenderRouteWithOutletContext>
+  );
 };
 
 describe('Local storage in search component', () => {
@@ -43,11 +49,7 @@ describe('Local storage in search component', () => {
   });
 
   it('Should call localStorage getItem on render', async () => {
-    const { rerender } = render(
-      <RenderRouteWithOutletContext>
-        <Header />
-      </RenderRouteWithOutletContext>
-    );
+    const { rerender } = RenderHeader();
     expect(window.localStorage.getItem).toHaveBeenCalledTimes(1);
     const inputSearch = screen.getByTestId('inputSearch');
     await userEvent.type(inputSearch, 'React Test');

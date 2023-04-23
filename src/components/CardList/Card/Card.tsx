@@ -20,7 +20,6 @@ export type IProps = {
 const Card = ({ setIsOpen, setCardState, card }: IProps) => {
   const { id, name, gender, created, species, status, image } = card;
   const handleClick: MouseEventHandler<HTMLDivElement> = (e) => {
-    console.log(e.currentTarget.id);
     document.body.classList.add('modalOpen');
     setCardState(card);
     setIsOpen(true);

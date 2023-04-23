@@ -1,8 +1,12 @@
 import s from '../Header/Header.module.css';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { IuseState, MyContext } from '../../App';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { addValue } from '../../Features/SearchSlice';
 
 const Search = () => {
+  const value = useAppSelector((state) => state.search.value);
+  const dispatch = useAppDispatch();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { setValue } = useContext(MyContext) as IuseState;
   const [inputValue, setInputValue] = useState('');
@@ -23,6 +27,7 @@ const Search = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
+    dispatch(addValue(inputValue));
   };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

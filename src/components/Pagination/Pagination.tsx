@@ -1,6 +1,8 @@
 import pageStyle from './Pagination.module.css';
 import { useEffect, useState } from 'react';
 import React from 'react';
+import { useAppDispatch } from '../../hooks';
+import { changeStatus } from '../../Features/CardsSlice';
 
 const createPages = (pages: number[], totalCount: number, currentPage: number) => {
   const range = Math.ceil(currentPage / 10) * 10 - 1;
@@ -30,20 +32,20 @@ interface IpaginatorProps {
   totalCount: number | undefined;
 }
 const Pagination = ({ setCurrentPage, currentPage = 1, totalCount = 1 }: IpaginatorProps) => {
-  const [currPage, setCurrPage] = useState(currentPage);
-  //const totalPageCount = Math.ceil(totalCount / pageSize);
+  const dispatch = useAppDispatch();
 
   const pages: number[] = [];
-  createPages(pages, totalCount, currPage);
-  setCurrentPage(currPage);
+  createPages(pages, totalCount, currentPage);
+
   return (
     <div className={pageStyle.pages}>
       {pages.map((pageNum, index) => (
         <span
           key={index}
-          className={currPage === pageNum ? pageStyle.currentPage : pageStyle.page}
+          className={currentPage === pageNum ? pageStyle.currentPage : pageStyle.page}
           onClick={() => {
-            setCurrPage(pageNum);
+            setCurrentPage(pageNum);
+            dispatch(changeStatus('idle'));
           }}
         >
           {pageNum}
