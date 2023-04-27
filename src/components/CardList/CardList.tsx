@@ -8,11 +8,9 @@ import { useSelector } from 'react-redux';
 
 type CardsProps = {
   setIsOpen: React.Dispatch<boolean>;
-  setCardState: React.Dispatch<CardProps>;
 };
 
-const CardList = (props: CardsProps) => {
-  const { setIsOpen, setCardState } = props;
+const CardList = ({ setIsOpen }: CardsProps) => {
   const cards = useSelector(selectCardList);
   const error = useAppSelector(getCardsError);
   const status = useAppSelector(getCardsStatus);
@@ -26,7 +24,7 @@ const CardList = (props: CardsProps) => {
       ) : (
         <div className={s.cards}>
           {cards.map((card) => (
-            <Card key={card.id} card={card} setCardState={setCardState} setIsOpen={setIsOpen} />
+            <Card key={card.id} card={card} setIsOpen={setIsOpen} />
           ))}
         </div>
       )}

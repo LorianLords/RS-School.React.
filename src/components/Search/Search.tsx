@@ -3,12 +3,13 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { IuseState, MyContext } from '../../App';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { addValue } from '../../Features/SearchSlice';
+import { getSearchValue, setSearchValue } from '../../Features/CardsSlice';
 
 const Search = () => {
-  const value = useAppSelector((state) => state.search.value);
+  const value = useAppSelector(getSearchValue);
   const dispatch = useAppDispatch();
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { setValue } = useContext(MyContext) as IuseState;
+
   const [inputValue, setInputValue] = useState('');
   useEffect(() => {
     window.addEventListener('beforeunload', componentCleanup);
@@ -31,7 +32,7 @@ const Search = () => {
   };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setValue(event.currentTarget['search'].value);
+    dispatch(setSearchValue(event.currentTarget['search'].value));
   };
 
   return (

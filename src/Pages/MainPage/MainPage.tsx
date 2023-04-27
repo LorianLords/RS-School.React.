@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { ChangeEvent, useCallback, useContext, useEffect, useState } from 'react';
 import CardList from '../../components/CardList/CardList';
 import CreateCard from '../../components/CreateCard/CreateCard';
 import s from './MainPage.module.css';
@@ -16,9 +16,13 @@ import {
   getCardsStatus,
   fetchCards,
   getPagesNum,
+  sortState,
+  getSearchValue,
+  fetchType,
 } from '../../Features/CardsSlice';
 import { AnyAction } from '@reduxjs/toolkit';
 import { useAppDispatch } from '../../hooks';
+import search from '../../components/Search/Search';
 
 export type RickAndMortyCardProps = {
   id: number;
@@ -73,20 +77,16 @@ const MainPage = () => {
   const cards = useSelector(selectCardList);
   console.log(1);
   const status = useSelector(getCardsStatus);
-  const error = useSelector(getCardsError);
   const pages = useSelector(getPagesNum);
-
+  const searchValue = useSelector(getSearchValue);
 
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDescription, setIsOpenDescription] = useState(false);
-  const [cardState, setCardState] = useState({});
-  //const [error, setError] = useState<string | undefined>('');
-  const { value, setValue } = useContext(MyContext) as IuseState;
   const [selectValue, setSelectValue] = useState<string>('default');
-  const [cardList, setCardList] = useState<RickAndMortyCardProps[]>([]);
   const [windowUrl, setWindowUrl] = useState(baseUrl);
   const [totalCount, setTotalCount] = useState<number | undefined>(1);
   const [currentPage, setCurrentPage] = useState<number | undefined>(1);
+
   const link = windowUrl === baseUrl ? 'createcard/' : './';
   const buttonText = isOpen ? 'Close Window' : 'Create new Card';
 
@@ -106,21 +106,19 @@ const MainPage = () => {
   }, [currentPage, value, selectValue]);*/
 
   useEffect(() => {
-    console.log('useEffect');
-    console.log(status);
     if (status === 'idle') {
-      dispatch(fetchCards(currentPage || 1) as unknown as AnyAction);
+      const userData: fetchType = {
+        currentPage: currentPage || 1,
+        searchValue: searchValue,
+      };
+      dispatch(fetchCards(userData as fetchType));
     }
     if (status === 'succeeded') {
-      const sortData = Sorting(selectValue, cards);
+      /*   const sortData = Sorting(selectValue, cards);*/
+      dispatch(sortState({ selectValue }));
       setTotalCount(pages);
-      setCardList(sortData);
     }
-  }, [status, dispatch, currentPage]);
-
-  const updateCardList = useCallback((card: CardProps) => {
-    setCardList((prev) => [...prev, card]);
-  }, []);
+  }, [status, dispatch, currentPage, selectValue, searchValue]);
 
   const onCreateCard = () => {
     /* setWindowUrl(windowUrl === baseUrl ? 'createcard/' : baseUrl);
@@ -129,15 +127,18 @@ const MainPage = () => {
     setIsOpenDescription(true);
   };
 
-  const Sorting = (selectValue = 'default', dataList: RickAndMortyCardProps[]) => {
-    console.log(selectValue);
+  /*const Sorting = (selectValue = 'default', dataList: RickAndMortyCardProps[]) => {
     if (selectValue === 'default') return dataList;
     const key = selectValue as keyof RickAndMortyCardProps;
-    return dataList.sort((a: RickAndMortyCardProps, b: RickAndMortyCardProps) =>
-      (a?.[key] || '') > (b?.[key] || '') ? 1 : -1
+    return [...dataList].sort((a: RickAndMortyCardProps, b: RickAndMortyCardProps) =>
+      (a[key] || '') > (b[key] || '') ? 1 : -1
     );
-  };
+  };*/
 
+  const onChangeSort = (e: ChangeEvent<HTMLSelectElement>) => {
+    const sortOption = e.target.value;
+    setSelectValue(sortOption);
+  };
   return (
     <div className={s.main}>
       <h1>Welcome to our main page</h1>
@@ -147,23 +148,22 @@ const MainPage = () => {
           {buttonText}
         </button>
       </Link>
-      {isOpenDescription && (
-        <ModalWindow
-          cardState={cardState as RickAndMortyCardProps}
-          setIsOpen={setIsOpenDescription}
-        />
-      )}
+
+      {isOpenDescription && <ModalWindow setIsOpen={setIsOpenDescription} />}
+
       <div className={s.paginatorWrapper}>
-        <Pagination totalCount={totalCount} setCurrentPage={setCurrentPage} />
+        <Pagination
+          totalCount={totalCount}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
 
         <div className={s.typeSelect}>
           <select
             id={'selectSort'}
             value={selectValue}
             data-testid={'selectSearchTest'}
-            onChange={(e) => {
-              setSelectValue(e.target.value);
-            }}
+            onChange={onChangeSort}
           >
             <option value="default">По умолчанию</option>
             <option value="name">По имени</option>
@@ -172,7 +172,7 @@ const MainPage = () => {
         </div>
       </div>
 
-      <CardList setIsOpen={setIsOpenDescription} setCardState={setCardState} />
+      <CardList setIsOpen={setIsOpenDescription} />
     </div>
   );
 };

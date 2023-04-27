@@ -1,18 +1,22 @@
 import styles from './Modal.module.css';
 import { RickAndMortyCardProps } from '../../Pages/MainPage/MainPage';
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { getCardModal, getCardsError, selectCardList } from '../../Features/CardsSlice';
 
 type ModalProps = {
-  cardState: RickAndMortyCardProps;
   setIsOpen: React.Dispatch<boolean>;
   episode?: [];
   location?: { name: string; url: string };
   origin?: { name: string; url?: string };
   type?: string;
 };
-const ModalWindow = ({ cardState, setIsOpen }: ModalProps) => {
+const ModalWindow = ({ setIsOpen }: ModalProps) => {
+  const card = useSelector(getCardModal);
+
   const { name, gender, created, species, status, image, episode, location, origin, type } =
-    cardState;
+    card as RickAndMortyCardProps;
+
   const onCloseModal = () => {
     setIsOpen(false);
     document.body.classList.remove('modalOpen');
