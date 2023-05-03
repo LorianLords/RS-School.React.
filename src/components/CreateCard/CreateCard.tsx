@@ -3,57 +3,64 @@ import s from './CreateCard.module.css';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import Input from './InputField/Input';
-import { CardProps } from '../CardList/Card/Card';
+import { useAppDispatch } from '../../hooks';
+import { pushCardData } from '../../Features/CardsSlice';
+import Select from './InputField/Select';
 
-type FormValues = {
-  tripName: string;
-  tripDate: string;
-  tripType: string;
-  overnightStay: string;
-  tripImg: FileList;
+type RickAndMortyCardProps = {
+  id: number;
+  name: string;
+  gender: string;
+  species: string;
+  created: string;
+  status: string;
+  image: string;
+  episode?: [];
+  location?: { name: string; url: string };
+  origin?: { name: string; url?: string };
+  type?: string;
+  url?: string;
 };
 
-type CreateCardProps = {
-  updateCardList: (card: FormValues) => void;
-};
-
-const CreateCard = (props: CreateCardProps) => {
+const statusOptions = ['Alive', 'Dead', 'Unknown'];
+const radioGender = ['Male', 'Female', 'Unknown'];
+const CreateCard = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>({
+  } = useForm<RickAndMortyCardProps>({
     defaultValues: {
-      tripName: '',
-      tripDate: '',
-      tripType: 'Tourist bus',
-      overnightStay: '',
-      tripImg: undefined,
+      name: '',
+      gender: '',
+      species: '',
+      created: '',
+      status: 'Alive',
+      image: undefined,
     },
   });
   const [fileName, setFileName] = useState('');
-
-  const onSubmit: SubmitHandler<FormValues> = (data, event) => {
-    const file = data.tripImg?.[0];
+  const dispatch = useAppDispatch();
+  const onSubmit: SubmitHandler<RickAndMortyCardProps> = (data, event) => {
+    const file = data.image?.[0];
     let imageUrl = null;
     if (file) {
-      imageUrl = URL.createObjectURL(file);
+      imageUrl = URL.createObjectURL(file as unknown as Blob);
     }
     const card = {
-      id: 7,
       ...data,
-      overnightStay: Boolean(data.overnightStay),
-      tripImg: imageUrl,
+      location: { name: 'Unknown' },
+      origin: { name: 'Unknown' },
+      id: 237,
+      image: imageUrl,
     };
-    props.updateCardList(card);
+    dispatch(pushCardData({ card }));
     event?.target.reset();
     setFileName('');
   };
 
   const handleFileChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    debugger;
     const fileName = event.currentTarget.files?.[0]?.name || '';
-    console.log(errors.tripName);
     setFileName(fileName);
   };
 
@@ -62,81 +69,80 @@ const CreateCard = (props: CreateCardProps) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <h2>Create new Card</h2>
         <Input
-          type={'text'}
+          name={'name'}
           testId={'nameTest'}
-          name={'tripName'}
-          error={errors.tripName}
+          type={'text'}
+          error={errors.name}
           styles={s.name}
           register={register}
+          label={"Character's name:"}
           required={{ value: true, message: 'required input field' }}
           options={{
             maxLength: { value: 20, message: 'Max length is 20 symbols' },
           }}
-          label={'Название путевки:'}
+        />
+        <Input
+          type={'text'}
+          testId={'nameTest'}
+          name={'species'}
+          error={errors.species}
+          styles={s.name}
+          register={register}
+          label={'Species:'}
+          required={{ value: true, message: 'required input field' }}
+          options={{
+            maxLength: { value: 20, message: 'Max length is 20 symbols' },
+          }}
         />
 
         <Input
           type={'date'}
-          name={'tripDate'}
+          name={'created'}
           testId={'dateTest'}
-          error={errors.tripDate}
+          error={errors.created}
           styles={s.name}
           register={register}
           required={{ value: true, message: 'required input field' }}
+          label={'Created date:'}
           options={{
             pattern: {
               value: /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/,
               message: 'Date of Birth must be a valid date in the format YYYY-MM-DD',
             },
-            min: { value: '2023-03-01', message: 'Date of trip must be later than 2023-03-01' },
-            max: { value: '2023-12-31', message: 'Date of trip must be earlier than 2023-12-31' },
+            max: {
+              value: '2023-12-31',
+              message: 'Date of creation must be earlier than 2023-12-31',
+            },
           }}
-          label={'Дата начала:'}
         />
 
-        <label>Тип туристической экскурсии:</label>
-        <div className={s.typeSelect}>
-          <select
-            data-testid={'selectTest'}
-            {...register('tripType', {
-              required: {
-                value: true,
-                message: 'Field is not complete',
-              },
-            })}
-          >
-            <option data-testid={'bus-option'} value="Tourist bus">
-              Туристический автобус
-            </option>
-            <option value="Walking tour">Пешая прогулка</option>
-            <option value="Water transport">Водный транспорт</option>
-          </select>
-          <span className={s.focus}></span>
-        </div>
-        <p>{errors.tripType?.message}</p>
+        <Select
+          label={'Character status:'}
+          name={'status'}
+          testId={'selectTest'}
+          optionValues={statusOptions}
+          register={register}
+          required={{
+            value: true,
+            message: 'Field is not complete',
+          }}
+          errorText={errors.status?.message}
+        />
 
-        <div>
-          <label className={s.formControl}>
-            <input
-              type="radio"
-              data-testid={'radioTestWith'}
-              value={'true'}
-              {...register('overnightStay', { required: true })}
-              id="withNight"
-            />
-            С ночевкой
-          </label>
-          <label className={s.formControl}>
-            <input
-              type="radio"
-              data-testid={'radioTestWithout'}
-              value={'false'}
-              {...register('overnightStay', { required: true })}
-              id="withoutNight"
-            />
-            Без ночевки
-          </label>
-        </div>
+        {radioGender.map((gender, index) => {
+          return (
+            <label key={index} className={s.formControl}>
+              <input
+                type="radio"
+                data-testid={'radioTest' + gender}
+                value={gender}
+                {...register('gender', { required: true })}
+                id="withNight"
+              />
+              {gender}
+            </label>
+          );
+        })}
 
         <div>
           <label className={s.label}>
@@ -144,7 +150,7 @@ const CreateCard = (props: CreateCardProps) => {
               className={s.fileInput}
               type="file"
               data-testid={'input-file'}
-              {...register('tripImg')}
+              {...register('image')}
               accept="image/*"
               onChange={handleFileChange}
             />
@@ -153,7 +159,7 @@ const CreateCard = (props: CreateCardProps) => {
           </label>
         </div>
 
-        <input className={s.submit} data-testid={'submitTest'} type="submit" value={'Создать'} />
+        <input className={s.submit} data-testid={'submitTest'} type="submit" value={'Create'} />
       </form>
     </div>
   );

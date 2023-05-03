@@ -32,6 +32,7 @@ background-color: rgba(0, 0, 0, 0.6);
 }
 .modal img {
     border-radius: 10px;
+    max-width: 300px;
 }
 
 .modalHeader {

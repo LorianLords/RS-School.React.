@@ -45,7 +45,6 @@ const Input = ({
   <div className={s.inputField}>
     <label className={s.label}>{label}</label>
     <input
-      placeholder={'Name of trip'}
       type={type}
       data-testid={testId}
       className={styles}

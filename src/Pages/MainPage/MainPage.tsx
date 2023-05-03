@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { CardProps } from '../../components/CardList/Card/Card';
 import axios, { AxiosProgressEvent } from 'axios';
 import Pagination from '../../components/Pagination/Pagination';
-import { IuseState, MyContext } from '../../App';
+
 import ModalWindow from '../../components/Modal/Modal';
 import Loader from '../../components/Loader/Loader';
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,43 +38,10 @@ export type RickAndMortyCardProps = {
   type?: string;
   url?: string;
 };
-const getData = (
-  setError: React.Dispatch<string | undefined>,
-  pageNumber: number | undefined,
-  value?: string
-) => {
-  const baseUrl = 'https://rickandmortyapi.com/api/character/';
-  const options = value && `&name=${value}`;
-
-  return axios
-    .get(baseUrl + `?page=${pageNumber}` + options, {
-      onDownloadProgress: function (progressEvent: AxiosProgressEvent) {
-        console.log({ progressEvent });
-        /* if (progressEvent.total) {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          console.log(percentCompleted + '%');
-        }*/
-      },
-    })
-    .then((resp) => {
-      setError('');
-      return resp.data;
-    })
-    .catch((err) => {
-      console.log(err);
-      if (err.code === 'ERR_NETWORK') {
-        setError("Network isn't working");
-      }
-      if (err.code === 'ERR_BAD_REQUEST') {
-        setError('The character you are looking for is missing. Try another name');
-      }
-    });
-};
 
 const baseUrl = './';
 const MainPage = () => {
   const dispatch = useAppDispatch();
-  const cards = useSelector(selectCardList);
   console.log(1);
   const status = useSelector(getCardsStatus);
   const pages = useSelector(getPagesNum);
@@ -95,16 +62,6 @@ const MainPage = () => {
     navigate(windowUrl);
   }, []);
 
-  /*useEffect(() => {
-    setIsLoading(true);
-    getData(setError, currentPage, value).then((data) => {
-      const sortData = Sorting(selectValue, data.results);
-      setTotalCount(data.info.pages);
-      setCardList(sortData);
-      setIsLoading(false);
-    });
-  }, [currentPage, value, selectValue]);*/
-
   useEffect(() => {
     if (status === 'idle') {
       const userData: fetchType = {
@@ -121,19 +78,9 @@ const MainPage = () => {
   }, [status, dispatch, currentPage, selectValue, searchValue]);
 
   const onCreateCard = () => {
-    /* setWindowUrl(windowUrl === baseUrl ? 'createcard/' : baseUrl);
-    setIsOpen((current) => !current);*/
-    document.body.classList.add('modalOpen');
-    setIsOpenDescription(true);
+    setIsOpen(!isOpen);
+    setWindowUrl(windowUrl === baseUrl ? 'createcard/' : './');
   };
-
-  /*const Sorting = (selectValue = 'default', dataList: RickAndMortyCardProps[]) => {
-    if (selectValue === 'default') return dataList;
-    const key = selectValue as keyof RickAndMortyCardProps;
-    return [...dataList].sort((a: RickAndMortyCardProps, b: RickAndMortyCardProps) =>
-      (a[key] || '') > (b[key] || '') ? 1 : -1
-    );
-  };*/
 
   const onChangeSort = (e: ChangeEvent<HTMLSelectElement>) => {
     const sortOption = e.target.value;
@@ -142,7 +89,7 @@ const MainPage = () => {
   return (
     <div className={s.main}>
       <h1>Welcome to our main page</h1>
-      {/*{isOpen && <CreateCard updateCardList={updateCardList} />}*/}
+      {isOpen && <CreateCard />}
       <Link to={link}>
         <button className={s.windowBtn} onClick={onCreateCard}>
           {buttonText}

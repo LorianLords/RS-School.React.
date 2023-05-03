@@ -61,6 +61,11 @@ export const cardSlice = createSlice({
   name: 'cards',
   initialState,
   reducers: {
+    pushCardData(state, action) {
+      debugger;
+      console.log(state.cardList.unshift(action.payload.card));
+      window.alert(state.cardList[0].id);
+    },
     changeStatus(state, action) {
       state.status = action.payload;
     },
@@ -106,6 +111,6 @@ export const getCardsError = (state: RootState) => state.cards.error;
 export const getCardModal = (state: RootState) => state.cards.modalWindow;
 export const getPagesNum = (state: RootState) => state.cards.pages;
 export const getSearchValue = (state: RootState) => state.cards.searchValue;
-export const { changeStatus, setModalWindow, sortState, setSearchValue } = cardSlice.actions;
+export const { changeStatus, setModalWindow, sortState, setSearchValue, pushCardData } = cardSlice.actions;
 
 export default cardSlice.reducer;

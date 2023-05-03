@@ -1,52 +1,37 @@
 import s from '../Header/Header.module.css';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { IuseState, MyContext } from '../../App';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { addValue } from '../../Features/SearchSlice';
+
 import { getSearchValue, setSearchValue } from '../../Features/CardsSlice';
 
 const Search = () => {
   const value = useAppSelector(getSearchValue);
   const dispatch = useAppDispatch();
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
+  const addValue = (currentValue: string) => dispatch(setSearchValue(currentValue));
   const [inputValue, setInputValue] = useState('');
+
   useEffect(() => {
-    window.addEventListener('beforeunload', componentCleanup);
-    const storageValue = localStorage.getItem('search');
-    setInputValue(storageValue || '');
-
-    return () => {
-      window.removeEventListener('beforeunload', componentCleanup);
-    };
+    setInputValue(value || '');
   }, []);
-
-  const componentCleanup = () => {
-    if (inputRef.current?.value !== null)
-      localStorage.setItem('search', inputRef.current?.value as string);
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
-    dispatch(addValue(inputValue));
   };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch(setSearchValue(event.currentTarget['search'].value));
+    addValue(inputValue);
   };
 
   return (
     <div className={s.headerSearch}>
       <form id={s['search-form']} role="search" onSubmit={handleSubmit}>
         <input
-          id="search"
-          placeholder="Search"
+
           type="search"
           data-testid={'inputSearch'}
+          placeholder="Search"
           className={s.searchInput}
-          name="q"
           value={inputValue}
-          ref={inputRef}
           onChange={handleChange}
         />
         <button className={s.searchBtn} type={'submit'}></button>

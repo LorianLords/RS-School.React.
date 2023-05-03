@@ -25,7 +25,7 @@ export interface IuseState {
   value: string;
   setValue: React.Dispatch<string>;
 }
-const RenderHeader = () => {
+/*const RenderHeader = () => {
   //const setStateMock = vi.fn();
   // const useStateMock = (useState) => ([useState, setStateMock];
   const [value, setValue] = useState('hello');
@@ -37,7 +37,7 @@ const RenderHeader = () => {
       </UserContext.Provider>
     </RenderRouteWithOutletContext>
   );
-};
+};*/
 
 describe('Local storage in search component', () => {
   Object.defineProperty(window, 'localStorage', {
@@ -49,15 +49,10 @@ describe('Local storage in search component', () => {
   });
 
   it('Should call localStorage getItem on render', async () => {
-    const { rerender } = RenderHeader();
     expect(window.localStorage.getItem).toHaveBeenCalledTimes(1);
     const inputSearch = screen.getByTestId('inputSearch');
     await userEvent.type(inputSearch, 'React Test');
-    rerender(
-      <RenderRouteWithOutletContext>
-        <Header />
-      </RenderRouteWithOutletContext>
-    );
+    return render(<Header />);
     expect(window.localStorage.getItem).toHaveBeenCalledTimes(1);
     expect(inputSearch).toHaveValue('React Test');
   });

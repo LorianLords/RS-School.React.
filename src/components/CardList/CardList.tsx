@@ -11,10 +11,11 @@ type CardsProps = {
 };
 
 const CardList = ({ setIsOpen }: CardsProps) => {
+
   const cards = useSelector(selectCardList);
   const error = useAppSelector(getCardsError);
   const status = useAppSelector(getCardsStatus);
-
+  debugger
   return (
     <>
       {error ? (

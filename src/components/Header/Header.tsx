@@ -5,6 +5,11 @@ import { Link, NavLink } from 'react-router-dom';
 import Search from '../Search/Search';
 
 const Header = () => {
+  const routeLinks = [
+    { title: 'Main', to: '/main' },
+    { title: 'About Us', to: '/aboutus' },
+    { title: '', to: '' },
+  ];
   return (
     <header className={s.header}>
       <div className={s.headerContainer}>
@@ -13,12 +18,11 @@ const Header = () => {
           <Search />
         </div>
         <div className={s.headerItems}>
-          <NavLink to={'/main'} className={s.headerItem}>
-            Main
-          </NavLink>
-          <NavLink to={'/aboutus'} className={s.headerItem}>
-            About Us
-          </NavLink>
+          {routeLinks.map((route, index) => (
+            <NavLink key={index} to={route.to} className={s.headerItem}>
+              {route.title}
+            </NavLink>
+          ))}
           <div className={s.headerItem}>Cards</div>
         </div>
       </div>
