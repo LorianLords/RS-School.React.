@@ -39,12 +39,13 @@ const Select: React.FC<SelectProps> = ({
             required: required,
           })}
         >
-          <option value="Alive">Alive</option>
           {optionValues.map((value, index) => {
-            return <option key={index}>{value}</option>;
+            return (
+              <option value={value} key={index}>
+                {value}
+              </option>
+            );
           })}
-          <option value="Dead">Dead</option>
-          <option value="Unknown">Unknown</option>
         </select>
         <span className={s.focus}></span>
       </div>

@@ -28,7 +28,7 @@ const Card = ({ setIsOpen, card }: IProps) => {
   };
 
   return (
-    <div id={id.toString()} data-testid={name} className={s.card} onClick={handleClick}>
+    <div id={id.toString()} data-testid={'testCard'} className={s.card} onClick={handleClick}>
       <img src={image} alt={name} draggable={false} />
       <h2>{name}</h2>
       <h3>

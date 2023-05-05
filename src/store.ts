@@ -1,11 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import searchReducer from './Features/SearchSlice';
 import cardsReducer from './Features/CardsSlice';
+import { RickAndMortyApi } from './Features/FetchApi';
 export const store = configureStore({
   reducer: {
     search: searchReducer,
     cards: cardsReducer,
+    [RickAndMortyApi.reducerPath]: RickAndMortyApi.reducer,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(RickAndMortyApi.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

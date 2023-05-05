@@ -14,7 +14,7 @@ type ModalProps = {
 const ModalWindow = ({ setIsOpen }: ModalProps) => {
   const card = useSelector(getCardModal);
 
-  const { name, gender, created, species, status, image, episode, location, origin, type } =
+  const { name, gender, created, species, status, image, location, origin, type } =
     card as RickAndMortyCardProps;
 
   const onCloseModal = () => {
@@ -28,7 +28,7 @@ const ModalWindow = ({ setIsOpen }: ModalProps) => {
         <div className={styles.modal}>
           <div className={styles.modalHeader}>
             <h1>{name}</h1>
-            <div className={styles.closeModal} onClick={onCloseModal}></div>
+            <div data-testid="closeTest" className={styles.closeModal} onClick={onCloseModal}></div>
           </div>
 
           <img src={image} alt="" />

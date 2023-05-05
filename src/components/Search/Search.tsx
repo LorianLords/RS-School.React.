@@ -26,7 +26,6 @@ const Search = () => {
     <div className={s.headerSearch}>
       <form id={s['search-form']} role="search" onSubmit={handleSubmit}>
         <input
-
           type="search"
           data-testid={'inputSearch'}
           placeholder="Search"

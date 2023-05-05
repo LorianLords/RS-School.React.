@@ -33,7 +33,6 @@ interface IpaginatorProps {
 }
 const Pagination = ({ setCurrentPage, currentPage = 1, totalCount = 1 }: IpaginatorProps) => {
   const dispatch = useAppDispatch();
-  debugger;
   const pages: number[] = [];
   createPages(pages, totalCount, currentPage);
 

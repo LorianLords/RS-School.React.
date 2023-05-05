@@ -6,9 +6,9 @@ import { AnyAsyncThunk } from '@reduxjs/toolkit/dist/matchers';
 import cardList from '../components/CardList/CardList';
 import { RootState } from '../store';
 import { searchSlice } from './SearchSlice';
-const BASE_URL = 'https://rickandmortyapi.com/api/character/';
+const BASE_URL = 'https://rickandmortyapi.com/api/character';
 
-interface ResponseData {
+export interface ResponseData {
   info?: {
     pages: number;
   };
@@ -40,7 +40,6 @@ const initialState: CardsState = {
 export const fetchCards = createAsyncThunk(
   'cards/fetchCards',
   async ({ currentPage, searchValue }: fetchType) => {
-    debugger;
     const options = searchValue && `&name=${searchValue}`;
     //const options = value && `&name=${value}`;
     const response = await axios.get(BASE_URL + `?page=${currentPage}` + options);
@@ -111,6 +110,7 @@ export const getCardsError = (state: RootState) => state.cards.error;
 export const getCardModal = (state: RootState) => state.cards.modalWindow;
 export const getPagesNum = (state: RootState) => state.cards.pages;
 export const getSearchValue = (state: RootState) => state.cards.searchValue;
-export const { changeStatus, setModalWindow, sortState, setSearchValue, pushCardData } = cardSlice.actions;
+export const { changeStatus, setModalWindow, sortState, setSearchValue, pushCardData } =
+  cardSlice.actions;
 
 export default cardSlice.reducer;

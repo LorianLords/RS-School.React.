@@ -11,18 +11,21 @@ describe(' Create React Form component', () => {
       const inputName = screen.getByTestId('nameTest');
       await userEvent.type(inputName, 'React Test');
 
+      const inputSpecies = screen.getByTestId('speciesTest');
+      await userEvent.type(inputSpecies, ' Species');
+
       const inputDate = screen.getByTestId('dateTest');
       const date = '23.06.2023';
       await userEvent.type(inputDate, date);
 
       const select = screen.getByTestId('selectTest');
       const option = screen.getByRole('option', {
-        name: ' Туристический автобус',
+        name: 'Alive',
       }) as HTMLOptionElement;
       await userEvent.selectOptions(select, option);
 
-      const overnightStayRadio = screen.getByTestId('radioTestWith');
-      await userEvent.click(overnightStayRadio);
+      const genderRadio = screen.getByTestId('radioTestWithFemale');
+      await userEvent.click(genderRadio);
 
       global.URL.createObjectURL = vi.fn();
       const mockFile = new File(['someImage'], 'someImage.png', { type: 'image/png' });
@@ -36,7 +39,7 @@ describe(' Create React Form component', () => {
       waitFor(() => card);
       expect(card).toBeInTheDocument();
       expect(screen.getByRole('img')).toBeInTheDocument();
-      expect(screen.getByText('React')).toBeInTheDocument();
+      expect(screen.getByText('React Test')).toBeInTheDocument();
       expect(screen.getByText(date)).toBeInTheDocument();
     };
 });

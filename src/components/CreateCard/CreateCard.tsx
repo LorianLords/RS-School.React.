@@ -83,7 +83,7 @@ const CreateCard = () => {
         />
         <Input
           type={'text'}
-          testId={'nameTest'}
+          testId={'speciesTest'}
           name={'species'}
           error={errors.species}
           styles={s.name}

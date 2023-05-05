@@ -3,16 +3,12 @@ import CardList from '../../components/CardList/CardList';
 import CreateCard from '../../components/CreateCard/CreateCard';
 import s from './MainPage.module.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { CardProps } from '../../components/CardList/Card/Card';
-import axios, { AxiosProgressEvent } from 'axios';
 import Pagination from '../../components/Pagination/Pagination';
 
 import ModalWindow from '../../components/Modal/Modal';
-import Loader from '../../components/Loader/Loader';
+
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  selectCardList,
-  getCardsError,
   getCardsStatus,
   fetchCards,
   getPagesNum,
@@ -20,9 +16,8 @@ import {
   getSearchValue,
   fetchType,
 } from '../../Features/CardsSlice';
-import { AnyAction } from '@reduxjs/toolkit';
+
 import { useAppDispatch } from '../../hooks';
-import search from '../../components/Search/Search';
 
 export type RickAndMortyCardProps = {
   id: number;
@@ -87,11 +82,11 @@ const MainPage = () => {
     setSelectValue(sortOption);
   };
   return (
-    <div className={s.main}>
+    <div data-testid={'mainPageTest'} className={s.main}>
       <h1>Welcome to our main page</h1>
       {isOpen && <CreateCard />}
       <Link to={link}>
-        <button className={s.windowBtn} onClick={onCreateCard}>
+        <button data-testid={'btnCreateTest'} className={s.windowBtn} onClick={onCreateCard}>
           {buttonText}
         </button>
       </Link>
@@ -109,7 +104,7 @@ const MainPage = () => {
           <select
             id={'selectSort'}
             value={selectValue}
-            data-testid={'selectSearchTest'}
+            data-testid={'selectSortTest'}
             onChange={onChangeSort}
           >
             <option value="default">По умолчанию</option>
