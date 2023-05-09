@@ -1,10 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import searchReducer from './Features/SearchSlice';
 import cardsReducer from './Features/CardsSlice';
 import { RickAndMortyApi } from './Features/FetchApi';
 export const store = configureStore({
   reducer: {
-    search: searchReducer,
     cards: cardsReducer,
     [RickAndMortyApi.reducerPath]: RickAndMortyApi.reducer,
   },

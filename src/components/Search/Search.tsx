@@ -4,10 +4,13 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 
 import { getSearchValue, setSearchValue } from '../../Features/CardsSlice';
 
+
 const Search = () => {
   const value = useAppSelector(getSearchValue);
+  const currentPage = 1;
   const dispatch = useAppDispatch();
-  const addValue = (currentValue: string) => dispatch(setSearchValue(currentValue));
+  const addValue = (inputValue: string) => dispatch(setSearchValue({ inputValue, currentPage }));
+
   const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {

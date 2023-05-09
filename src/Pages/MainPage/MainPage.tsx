@@ -7,17 +7,8 @@ import Pagination from '../../components/Pagination/Pagination';
 
 import ModalWindow from '../../components/Modal/Modal';
 
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  getCardsStatus,
-  fetchCards,
-  getPagesNum,
-  sortState,
-  getSearchValue,
-  fetchType,
-} from '../../Features/CardsSlice';
-
-import { useAppDispatch } from '../../hooks';
+import { useSelector } from 'react-redux';
+import { getPagesNum, getCurrentPage } from '../../Features/CardsSlice';
 
 export type RickAndMortyCardProps = {
   id: number;
@@ -36,18 +27,15 @@ export type RickAndMortyCardProps = {
 
 const baseUrl = './';
 const MainPage = () => {
-  const dispatch = useAppDispatch();
-  console.log(1);
-  const status = useSelector(getCardsStatus);
   const pages = useSelector(getPagesNum);
-  const searchValue = useSelector(getSearchValue);
 
+  const currentPage = useSelector(getCurrentPage);
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDescription, setIsOpenDescription] = useState(false);
   const [selectValue, setSelectValue] = useState<string>('default');
   const [windowUrl, setWindowUrl] = useState(baseUrl);
-  const [totalCount, setTotalCount] = useState<number | undefined>(1);
-  const [currentPage, setCurrentPage] = useState<number | undefined>(1);
+  const [totalCount, setTotalCount] = useState<number | undefined>(pages || 1);
+  //const [currentPage, setCurrentPage] = useState<number | undefined>(1);
 
   const link = windowUrl === baseUrl ? 'createcard/' : './';
   const buttonText = isOpen ? 'Close Window' : 'Create new Card';
@@ -58,19 +46,8 @@ const MainPage = () => {
   }, []);
 
   useEffect(() => {
-    if (status === 'idle') {
-      const userData: fetchType = {
-        currentPage: currentPage || 1,
-        searchValue: searchValue,
-      };
-      dispatch(fetchCards(userData as fetchType));
-    }
-    if (status === 'succeeded') {
-      /*   const sortData = Sorting(selectValue, cards);*/
-      dispatch(sortState({ selectValue }));
-      setTotalCount(pages);
-    }
-  }, [status, dispatch, currentPage, selectValue, searchValue]);
+    setTotalCount(pages);
+  }, [pages]);
 
   const onCreateCard = () => {
     setIsOpen(!isOpen);
@@ -94,11 +71,7 @@ const MainPage = () => {
       {isOpenDescription && <ModalWindow setIsOpen={setIsOpenDescription} />}
 
       <div className={s.paginatorWrapper}>
-        <Pagination
-          totalCount={totalCount}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-        />
+        <Pagination totalCount={totalCount} currentPage={currentPage} />
 
         <div className={s.typeSelect}>
           <select
@@ -114,7 +87,11 @@ const MainPage = () => {
         </div>
       </div>
 
-      <CardList setIsOpen={setIsOpenDescription} />
+      <CardList
+        selectValue={selectValue}
+        currentPage={currentPage}
+        setIsOpen={setIsOpenDescription}
+      />
     </div>
   );
 };

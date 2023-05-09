@@ -2,7 +2,7 @@ import pageStyle from './Pagination.module.css';
 import { useEffect, useState } from 'react';
 import React from 'react';
 import { useAppDispatch } from '../../hooks';
-import { changeStatus } from '../../Features/CardsSlice';
+import { setCurrentPage } from '../../Features/CardsSlice';
 
 const createPages = (pages: number[], totalCount: number, currentPage: number) => {
   const range = Math.ceil(currentPage / 10) * 10 - 1;
@@ -27,11 +27,10 @@ const createPages = (pages: number[], totalCount: number, currentPage: number) =
 };
 
 interface IpaginatorProps {
-  setCurrentPage: React.Dispatch<number | undefined>;
   currentPage?: number;
   totalCount: number | undefined;
 }
-const Pagination = ({ setCurrentPage, currentPage = 1, totalCount = 1 }: IpaginatorProps) => {
+const Pagination = ({ currentPage = 1, totalCount = 1 }: IpaginatorProps) => {
   const dispatch = useAppDispatch();
   const pages: number[] = [];
   createPages(pages, totalCount, currentPage);
@@ -43,8 +42,7 @@ const Pagination = ({ setCurrentPage, currentPage = 1, totalCount = 1 }: Ipagina
           key={index}
           className={currentPage === pageNum ? pageStyle.currentPage : pageStyle.page}
           onClick={() => {
-            setCurrentPage(pageNum);
-            dispatch(changeStatus('idle'));
+            dispatch(setCurrentPage(pageNum));
           }}
         >
           {pageNum}

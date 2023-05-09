@@ -2,7 +2,9 @@ import styles from './Modal.module.css';
 import { RickAndMortyCardProps } from '../../Pages/MainPage/MainPage';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { getCardModal, getCardsError, selectCardList } from '../../Features/CardsSlice';
+import { getCardModalId, getCurrentPage, getSearchValue } from '../../Features/CardsSlice';
+import { useGetAllCharactersQuery } from '../../Features/FetchApi';
+import { useAppSelector } from '../../hooks';
 
 type ModalProps = {
   setIsOpen: React.Dispatch<boolean>;
@@ -12,8 +14,14 @@ type ModalProps = {
   type?: string;
 };
 const ModalWindow = ({ setIsOpen }: ModalProps) => {
-  const card = useSelector(getCardModal);
+  const searchValue = useAppSelector(getSearchValue);
+  const currentPage = useAppSelector(getCurrentPage);
+  const cardId = useAppSelector(getCardModalId);
+  const { data: cards } = useGetAllCharactersQuery({ searchValue, currentPage });
 
+  const card = cards?.results.find((card) => card.id === cardId);
+
+  console.log(card);
   const { name, gender, created, species, status, image, location, origin, type } =
     card as RickAndMortyCardProps;
 
