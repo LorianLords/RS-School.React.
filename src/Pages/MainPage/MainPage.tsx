@@ -35,7 +35,6 @@ const MainPage = () => {
   const [selectValue, setSelectValue] = useState<string>('default');
   const [windowUrl, setWindowUrl] = useState(baseUrl);
   const [totalCount, setTotalCount] = useState<number | undefined>(pages || 1);
-  //const [currentPage, setCurrentPage] = useState<number | undefined>(1);
 
   const link = windowUrl === baseUrl ? 'createcard/' : './';
   const buttonText = isOpen ? 'Close Window' : 'Create new Card';
