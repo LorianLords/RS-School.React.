@@ -27,13 +27,31 @@ async function createServer() {
 
       template = await vite.transformIndexHtml(url, template);
 
+      const parts = template.split('<!--app-html-->');
+
       const { render } = await vite.ssrLoadModule('/src/entry-server.tsx');
 
-      const appHtml = await render(url);
+      const [{ pipe }, store] = await render(url, {
+        ohShellReady() {
+          res.write(parts[0]);
+          pipe(res);
+        },
+        onAllReady() {
+          res.write(
+            parts[1] +
+              `<script>window.__PRELOADED_STATE__ = ${JSON.stringify(store.getState()).replace(
+                /</g,
+                '\\u003c'
+              )}</script>`
+          );
+          res.end();
+        },
+      });
+      /* const appHtml = await render(url);
 
       const html = template.replace(`<!--ssr-outlet-->`, appHtml);
 
-      res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
+      res.status(200).set({ 'Content-Type': 'text/html' }).end(html);*/
     } catch (err) {
       const e = err as Error;
       vite.ssrFixStacktrace(e);
@@ -41,7 +59,9 @@ async function createServer() {
     }
   });
 
-  app.listen(5173);
+  app.listen(5173, () => {
+    `listening on http://localhost:${5173}\``;
+  });
 }
 
 createServer();

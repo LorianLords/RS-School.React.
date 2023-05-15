@@ -25,10 +25,10 @@ export type RickAndMortyCardProps = {
   url?: string;
 };
 
-const baseUrl = './';
+const baseUrl = '/';
 const MainPage = () => {
   const pages = useSelector(getPagesNum);
-
+  console.log(1);
   const currentPage = useSelector(getCurrentPage);
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDescription, setIsOpenDescription] = useState(false);
@@ -36,7 +36,7 @@ const MainPage = () => {
   const [windowUrl, setWindowUrl] = useState(baseUrl);
   const [totalCount, setTotalCount] = useState<number | undefined>(pages || 1);
 
-  const link = windowUrl === baseUrl ? 'createcard/' : './';
+  const link = windowUrl === baseUrl ? '/form' : '/';
   const buttonText = isOpen ? 'Close Window' : 'Create new Card';
 
   const navigate = useNavigate();
@@ -50,7 +50,8 @@ const MainPage = () => {
 
   const onCreateCard = () => {
     setIsOpen(!isOpen);
-    setWindowUrl(windowUrl === baseUrl ? 'createcard/' : './');
+    console.log(windowUrl + ' ' + baseUrl);
+    setWindowUrl(windowUrl === baseUrl ? '/form' : '/');
   };
 
   const onChangeSort = (e: ChangeEvent<HTMLSelectElement>) => {

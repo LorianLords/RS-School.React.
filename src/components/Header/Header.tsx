@@ -6,7 +6,7 @@ import Search from '../Search/Search';
 
 const Header = () => {
   const routeLinks = [
-    { title: 'Main', to: '/main', testId: 'mainTest' },
+    { title: 'Main', to: '/', testId: 'mainTest' },
     { title: 'About Us', to: '/aboutus', testId: 'aboutTest' },
     { title: '', to: '', testId: 'errorTest' },
   ];
