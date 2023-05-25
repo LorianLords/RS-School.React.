@@ -1,20 +1,14 @@
 import React from 'react';
-import { Outlet, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import Header from './components/Header/Header';
-import { Provider } from 'react-redux';
-import { store } from './store';
+
 import MainPage from './Pages/MainPage/MainPage';
 import AboutUs from './Pages/AboutUs/AboutUs';
 import CreateCard from './components/CreateCard/CreateCard';
 import ErrorPage from './Pages/ErrorPage/ErrorPage';
 
-export interface IuseState {
-  value: string;
-  setValue: React.Dispatch<string>;
-}
-
-const App = () => {
+const App: React.FC = () => {
   return (
     <div className={'App'}>
       <Header />
@@ -24,7 +18,7 @@ const App = () => {
             <Route path="/form" element={<CreateCard />} />
           </Route>
           <Route path="/aboutus" element={<AboutUs />} />
-          <Route path="*" element={<ErrorPage />} />
+          <Route path="*" element={<ErrorPage />} />*
         </Routes>
       </div>
     </div>

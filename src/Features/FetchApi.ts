@@ -1,12 +1,15 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { ResponseData } from './CardsSlice';
-
-type fetchDataType = {
+import { ResponseData, SLICES_NAMES } from './CardsSlice';
+import * as rtkQuery from '@reduxjs/toolkit/dist/query/react';
+import IRTK from './IRTK';
+export type fetchDataType = {
   searchValue: string;
   currentPage: number | undefined;
 };
+
+const { createApi, fetchBaseQuery } = ((rtkQuery as IRTK).default ?? rtkQuery) as typeof rtkQuery;
+
 export const RickAndMortyApi = createApi({
-  reducerPath: 'RickAndMortyApi',
+  reducerPath: SLICES_NAMES.Api,
   baseQuery: fetchBaseQuery({ baseUrl: 'https://rickandmortyapi.com/api' }),
   endpoints: (builder) => ({
     getAllCharacters: builder.query<ResponseData, fetchDataType>({
@@ -23,6 +26,9 @@ export const RickAndMortyApi = createApi({
           name: searchValue,
         },
       }),
+    }),
+    getCharacters: builder.query<ResponseData, string>({
+      query: (name = '') => `character/?name=${name}`,
     }),
   }),
 });

@@ -1,14 +1,14 @@
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import express, { NextFunction } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { createServer as createViteServer } from 'vite';
-import * as fs from 'fs';
-import { createStore, PreloadedState } from 'redux';
-import { renderToString } from 'react-dom/server';
-import { Provider } from 'react-redux';
+import { setupStore } from './src/store';
+import { RickAndMortyApi } from './src/Features/FetchApi';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+const PORT = 5173;
 async function createServer() {
   const app = express();
 
@@ -19,7 +19,7 @@ async function createServer() {
 
   app.use(vite.middlewares);
 
-  app.use('*', async (req, res, next) => {
+  app.use('*', async (req: Request, res: Response, next: NextFunction) => {
     const url = req.originalUrl;
 
     try {
@@ -29,12 +29,16 @@ async function createServer() {
 
       const parts = template.split('<!--app-html-->');
 
-      const { render } = await vite.ssrLoadModule('/src/entry-server.tsx');
+      const store = setupStore();
+      store.dispatch(RickAndMortyApi.endpoints.getCharacters.initiate(''));
+      await Promise.all(store.dispatch(RickAndMortyApi.util.getRunningQueriesThunk()));
 
-      const [{ pipe }, store] = await render(url, {
+      const render = (await vite.ssrLoadModule('/src/entry-server.tsx')).render;
+
+      const stream = await render(url, store, {
         ohShellReady() {
           res.write(parts[0]);
-          pipe(res);
+          stream.pipe(res);
         },
         onAllReady() {
           res.write(
@@ -47,11 +51,6 @@ async function createServer() {
           res.end();
         },
       });
-      /* const appHtml = await render(url);
-
-      const html = template.replace(`<!--ssr-outlet-->`, appHtml);
-
-      res.status(200).set({ 'Content-Type': 'text/html' }).end(html);*/
     } catch (err) {
       const e = err as Error;
       vite.ssrFixStacktrace(e);
@@ -59,9 +58,7 @@ async function createServer() {
     }
   });
 
-  app.listen(5173, () => {
-    `listening on http://localhost:${5173}\``;
-  });
+  app.listen(PORT, () => console.log(`listening on http://localhost:${PORT}`));
 }
 
 createServer();

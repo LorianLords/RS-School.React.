@@ -28,7 +28,6 @@ export type RickAndMortyCardProps = {
 const baseUrl = '/';
 const MainPage = () => {
   const pages = useSelector(getPagesNum);
-  console.log(1);
   const currentPage = useSelector(getCurrentPage);
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDescription, setIsOpenDescription] = useState(false);

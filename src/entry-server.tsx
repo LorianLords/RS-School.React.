@@ -1,8 +1,21 @@
-/*export const render = async (url: string, options: object) => {
-  const store = setupStore();
+import { renderToPipeableStream, RenderToReadableStreamOptions } from 'react-dom/server';
 
-  store.dispatch(RickAndMortyApi.endpoints.getAllCharacters.initiate(''));
-  await Promise.all(store.dispatch(RickAndMortyApi.util.getRunningQueriesThunk()));
+import { StaticRouter } from 'react-router-dom/server';
+import React from 'react';
+import App from './App';
+import { Provider } from 'react-redux';
+import store from './store';
+import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore';
 
-  return [];*/
-/*};*/
+export function render(url: string, store: ToolkitStore, options: RenderToReadableStreamOptions) {
+  return renderToPipeableStream(
+    <React.StrictMode>
+      <StaticRouter location={url}>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </StaticRouter>
+    </React.StrictMode>,
+    options
+  );
+}

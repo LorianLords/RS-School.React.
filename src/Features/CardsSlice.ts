@@ -1,46 +1,42 @@
-import { AsyncThunk, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { AxiosProgressEvent } from 'axios';
-import axios from 'axios';
+import * as toolkitRaw from '@reduxjs/toolkit';
 import { RickAndMortyCardProps } from '../Pages/MainPage/MainPage';
-import { AnyAsyncThunk } from '@reduxjs/toolkit/dist/matchers';
-import cardList from '../components/CardList/CardList';
+
 import { RootState } from '../store';
+import IRTK from './IRTK';
 
-const BASE_URL = 'https://rickandmortyapi.com/api/character';
-
+const { createSlice } = ((toolkitRaw as IRTK).default ?? toolkitRaw) as typeof toolkitRaw;
 export interface ResponseData {
   info?: {
     pages: number;
   };
   results: RickAndMortyCardProps[];
 }
-export interface fetchType {
-  currentPage: number;
-  searchValue: string;
-}
 
 interface CardsState {
   cardList: RickAndMortyCardProps[];
-  cardData: RickAndMortyCardProps | undefined;
+  cardData?: RickAndMortyCardProps;
   pages: number;
   currentPage: number;
 
   searchValue: string;
   error: string | null;
-  modalWindowId: number | undefined;
+  modalWindowId?: number;
 }
 const initialState: CardsState = {
   cardList: [],
-  cardData: undefined,
   pages: 0,
   currentPage: 1,
   searchValue: '',
   error: null,
-  modalWindowId: undefined,
 };
 
+export enum SLICES_NAMES {
+  Cards = 'cards',
+  Api = 'RickAndMortyApi',
+}
+
 export const cardSlice = createSlice({
-  name: 'cards',
+  name: SLICES_NAMES.Cards,
   initialState,
   reducers: {
     setCardsPages(state, action) {
