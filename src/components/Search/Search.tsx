@@ -2,8 +2,8 @@ import s from '../Header/Header.module.css';
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
-import { getSearchValue, setSearchValue } from '../../Features/CardsSlice';
-
+import { setSearchValue } from '../../Features/CardsSlice';
+import { getSearchValue } from '../../Features/Selectors';
 
 const Search = () => {
   const value = useAppSelector(getSearchValue);

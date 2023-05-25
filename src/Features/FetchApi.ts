@@ -15,16 +15,7 @@ export const RickAndMortyApi = createApi({
         params: { page: currentPage, name: searchValue },
       }),
     }),
-    getSearchCharacters: builder.query<ResponseData, string>({
-      query: (searchValue, currentPage = 1) => ({
-        url: '/character',
-        params: {
-          page: currentPage,
-          name: searchValue,
-        },
-      }),
-    }),
   }),
 });
 
-export const { useGetAllCharactersQuery, useGetSearchCharactersQuery } = RickAndMortyApi;
+export const { useGetAllCharactersQuery } = RickAndMortyApi;

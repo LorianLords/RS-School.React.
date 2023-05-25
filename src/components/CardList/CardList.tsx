@@ -3,13 +3,8 @@ import React, { useMemo } from 'react';
 import Card, { CardProps } from './Card/Card';
 import Loader from '../Loader/Loader';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import {
-  getCardData,
-  getCardsStatus,
-  getSearchValue,
-  setCardsPages,
-} from '../../Features/CardsSlice';
-import { useSelector } from 'react-redux';
+import { getCardData, getSearchValue } from '../../Features/Selectors';
+import { setCardsPages } from '../../Features/CardsSlice';
 import { useGetAllCharactersQuery } from '../../Features/FetchApi';
 import { RickAndMortyCardProps } from '../../Pages/MainPage/MainPage';
 
@@ -20,9 +15,6 @@ type CardsProps = {
 };
 
 const CardList = ({ setIsOpen, currentPage, selectValue }: CardsProps) => {
-  // const cards = useSelector(selectCardList);
-  //const error = useAppSelector(getCardsError);
-  //const status = useAppSelector(getCardsStatus);
   const dispatch = useAppDispatch();
   const searchValue = useAppSelector(getSearchValue);
   const newCard = useAppSelector(getCardData);
@@ -36,10 +28,6 @@ const CardList = ({ setIsOpen, currentPage, selectValue }: CardsProps) => {
   } = useGetAllCharactersQuery({ searchValue, currentPage });
 
   isSuccess && dispatch(setCardsPages(cards.info));
-  //newCard && cards?.results.unshift(newCard);
-
-  /* !isLoading && dispatch(setCardlist(cards));
-  const cardList = useAppSelector(getCardList);*/
 
   const sortedPosts = useMemo(() => {
     if (selectValue === 'default') selectValue = 'id';
@@ -50,10 +38,9 @@ const CardList = ({ setIsOpen, currentPage, selectValue }: CardsProps) => {
         (a[key] || '') > (b[key] || '') ? 1 : -1
     );
     newCard && cardsSorted.unshift(newCard);
-    debugger;
     return cardsSorted;
   }, [cards, selectValue, newCard]);
-  console.log(error);
+
   let content;
   if (isError) {
     content = <p>{error.toString()}</p>;

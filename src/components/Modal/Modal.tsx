@@ -2,7 +2,7 @@ import styles from './Modal.module.css';
 import { RickAndMortyCardProps } from '../../Pages/MainPage/MainPage';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { getCardModalId, getCurrentPage, getSearchValue } from '../../Features/CardsSlice';
+import { getCardModalId, getCurrentPage, getSearchValue } from '../../Features/Selectors';
 import { useGetAllCharactersQuery } from '../../Features/FetchApi';
 import { useAppSelector } from '../../hooks';
 

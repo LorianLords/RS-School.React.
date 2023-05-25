@@ -8,7 +8,7 @@ import Pagination from '../../components/Pagination/Pagination';
 import ModalWindow from '../../components/Modal/Modal';
 
 import { useSelector } from 'react-redux';
-import { getPagesNum, getCurrentPage } from '../../Features/CardsSlice';
+import { getPagesNum, getCurrentPage } from '../../Features/Selectors';
 
 export type RickAndMortyCardProps = {
   id: number;
@@ -25,17 +25,17 @@ export type RickAndMortyCardProps = {
   url?: string;
 };
 
+console.log(1);
 const baseUrl = './';
 const MainPage = () => {
   const pages = useSelector(getPagesNum);
-
   const currentPage = useSelector(getCurrentPage);
+
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDescription, setIsOpenDescription] = useState(false);
   const [selectValue, setSelectValue] = useState<string>('default');
   const [windowUrl, setWindowUrl] = useState(baseUrl);
   const [totalCount, setTotalCount] = useState<number | undefined>(pages || 1);
-  //const [currentPage, setCurrentPage] = useState<number | undefined>(1);
 
   const link = windowUrl === baseUrl ? 'createcard/' : './';
   const buttonText = isOpen ? 'Close Window' : 'Create new Card';

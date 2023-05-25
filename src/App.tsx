@@ -5,11 +5,6 @@ import Header from './components/Header/Header';
 import { Provider } from 'react-redux';
 import { store } from './store';
 
-export interface IuseState {
-  value: string;
-  setValue: React.Dispatch<string>;
-}
-
 const App = () => {
   return (
     <div className={'App'}>
