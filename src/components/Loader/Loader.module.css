@@ -1,0 +1,8 @@
+.svgWrapper{
+    width: 100px;
+    height: auto;
+}
+
+.svgWrapper svg{
+    padding: 5px;
+}

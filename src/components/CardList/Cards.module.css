@@ -1,0 +1,45 @@
+.cards{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.card {
+    position: relative;
+    z-index: 1;
+    width: 220px;
+    background-color: #242424;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    margin: 20px;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    z-index: 2;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+.card img {
+    width: 100%;
+    overflow: hidden;
+    height: auto;
+    border-radius: 10px 10px 0 0;
+}
+
+.card h2 {
+    font-size: 1.5rem;
+    margin: 10px;
+}
+
+.card p {
+    font-size: 1rem;
+    margin: 0 10px 5px;
+}
+.card label {
+    margin: 0 10px;
+}
+h3{
+    padding: 5px 10px;
+    margin: 10px 0;
+}

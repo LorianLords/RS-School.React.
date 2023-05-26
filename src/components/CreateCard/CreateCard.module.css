@@ -1,0 +1,227 @@
+
+
+.window{
+    background: rgba(0,0,0,0.5);
+    width: 300px;
+    height: 500px;
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2em;
+    margin: 10px 10px 5px;
+}
+.window form{
+
+}
+
+.window p {
+    font-size: 0.8rem;
+}
+.submit{
+    box-sizing: border-box;
+    border: none;
+    width: 100%;
+    font-family: inherit;
+    cursor: pointer;
+    margin: 10px 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: seagreen;
+    color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.18);
+    padding: 0.25em 0.75em;
+    min-width: 10ch;
+    min-height: 44px;
+
+    text-align: center;
+    line-height: 1.1;
+    transition: 220ms all ease-in-out;
+
+}
+.submit:hover,
+.submit:active{
+    background-color: darkolivegreen;
+}
+.submit:focus {
+    outline-style: solid;
+    outline-color: transparent;
+    box-shadow: 0 0 0 4px  #313d1d;
+}
+.window h2 {
+    text-align: center;
+    margin: 0.5rem 0 0.5rem 0;
+}
+.label{
+    position: relative;
+    display: inline-block;
+    margin-bottom: 0.25rem;
+}
+
+.inputField {
+    margin-bottom: 1rem;
+    display: inherit;
+
+}
+
+/*.text-field__label {
+    display: block;
+
+}*/
+
+.name {
+
+    align-self: center;
+    display: flex;
+    width: 70%;
+    height: calc(1.75rem + 2px);
+    padding: 0.375rem 0.75rem;
+    margin: 0;
+    font-family: inherit;
+    font-size: 1rem;
+    background-clip: padding-box;
+    border: 1px solid #bdbdbd;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+
+.name::placeholder {
+    color: #212529;
+    opacity: 0.4;
+}
+.name:focus {
+    color: #262626;
+    background-color: #fff;
+    border-color: #bdbdbd;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(158, 158, 158, 0.75);
+}
+.window p{
+    margin: 0
+}
+
+.window select{
+    appearance: none;
+    background-color: transparent;
+    border: none;
+    padding: 0 1em 0 0;
+    margin: 0;
+    width: 100%;
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+}
+select:focus + .focus{
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    border: 2px solid  #bdbdbd;;
+    border-radius: inherit;
+}
+.typeSelect{
+    width: 73%;
+    border: 1px solid #777;
+    border-radius: 0.25em;
+    padding: 0.25em 0.5em;
+    cursor: pointer;
+    line-height: 1.1;
+    background-color: #fff;
+    background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
+    display: grid;
+    grid-template-areas: "select";
+    align-items: center;
+    position: relative;
+}
+.typeSelect::after {
+    content: "";
+    width: 0.8em;
+    height: 0.5em;
+    background-color: #777;
+    clip-path: polygon(100% 0%, 0 0%, 50% 100%);
+    justify-self: end;
+}
+
+.window select, .typeSelect:after{
+    grid-area: select;
+}
+
+.formControl {
+    font-family: system-ui, sans-serif;
+    font-weight: bold;
+    line-height: 1.1;
+    padding: 10px;
+
+}
+
+input{
+    padding: 15px;
+    margin: 10px 0px
+}
+
+
+.fileInput {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+    display: block;
+    width: 0;
+    height: 0;
+}
+
+.inputFileBtn{
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 14px;
+    vertical-align: middle;
+    color: rgb(255 255 255);
+    text-align: center;
+    border-radius: 4px;
+    background-color: #419152;
+    height: 40px;
+    padding: 10px 20px;
+    margin: 0;
+    box-sizing: border-box;
+    transition: background-color 0.2s;
+}
+
+.inputFileText{
+    padding: 0 10px;
+    line-height: 40px;
+    display: inline-block;
+}
+
+.label input[type=file] {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+    display: block;
+    width: 0;
+    height: 0;
+}
+
+/* Focus */
+.label input[type=file]:focus + .inputFileBtn {
+    box-shadow: 0 0 0 0.2rem rgba(49, 61, 29, 0.75);
+}
+
+/* Hover/active */
+.label:hover .inputFileBtn {
+    background-color: darkolivegreen;
+}
+.label:active .inputFileBtn {
+    background-color: #2E703A;
+}
+
+/* Disabled */
+.label input[type=file]:disabled + .inputFileBtn {
+    background-color: #eee;
+}
