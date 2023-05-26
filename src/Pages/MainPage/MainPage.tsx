@@ -9,37 +9,28 @@ import ModalWindow from '../../components/Modal/Modal';
 
 import { useSelector } from 'react-redux';
 import { getPagesNum, getCurrentPage } from '../../Features/Selectors';
-
-export type RickAndMortyCardProps = {
-  id: number;
-  name: string;
-  gender: string;
-  species: string;
-  created: string;
-  status: string;
-  image: string;
-  episode?: [];
-  location?: { name: string; url: string };
-  origin?: { name: string; url?: string };
-  type?: string;
-  url?: string;
-};
+import { useModalState } from '../../hooks/useModalState';
 
 console.log(1);
 const baseUrl = './';
 const MainPage = () => {
   const pages = useSelector(getPagesNum);
   const currentPage = useSelector(getCurrentPage);
-
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, onToggle, onOpen, onClose } = useModalState();
+  const [isOpenForm, setIsOpenForm] = useState(false);
   const [isOpenDescription, setIsOpenDescription] = useState(false);
-  const [selectValue, setSelectValue] = useState<string>('default');
+  const [selectValue, setSelectValue] = useState<string>('id');
   const [windowUrl, setWindowUrl] = useState(baseUrl);
-  const [totalCount, setTotalCount] = useState<number | undefined>(pages || 1);
+  const [totalCount, setTotalCount] = useState<number>(pages || 1);
 
   const link = windowUrl === baseUrl ? 'createcard/' : './';
-  const buttonText = isOpen ? 'Close Window' : 'Create new Card';
+  const buttonText = isOpenForm ? 'Close Window' : 'Create new Card';
 
+  const selectOptions = [
+    { value: 'id', title: 'По умолчанию' },
+    { value: 'name', title: 'По имени' },
+    { value: 'status', title: 'По статусу' },
+  ];
   const navigate = useNavigate();
   useEffect(() => {
     navigate(windowUrl);
@@ -50,7 +41,7 @@ const MainPage = () => {
   }, [pages]);
 
   const onCreateCard = () => {
-    setIsOpen(!isOpen);
+    setIsOpenForm(!isOpenForm);
     setWindowUrl(windowUrl === baseUrl ? 'createcard/' : './');
   };
 
@@ -61,14 +52,14 @@ const MainPage = () => {
   return (
     <div data-testid={'mainPageTest'} className={s.main}>
       <h1>Welcome to our main page</h1>
-      {isOpen && <CreateCard />}
+      {isOpenForm && <CreateCard />}
       <Link to={link}>
         <button data-testid={'btnCreateTest'} className={s.windowBtn} onClick={onCreateCard}>
           {buttonText}
         </button>
       </Link>
 
-      {isOpenDescription && <ModalWindow setIsOpen={setIsOpenDescription} />}
+      {isOpen && <ModalWindow onClose={onClose}/>}
 
       <div className={s.paginatorWrapper}>
         <Pagination totalCount={totalCount} currentPage={currentPage} />
@@ -80,18 +71,16 @@ const MainPage = () => {
             data-testid={'selectSortTest'}
             onChange={onChangeSort}
           >
-            <option value="default">По умолчанию</option>
-            <option value="name">По имени</option>
-            <option value="status">По статусу</option>
+            {selectOptions.map((option, index) => (
+              <option key={index} value={option.value}>
+                {option.title}
+              </option>
+            ))}
           </select>
         </div>
       </div>
 
-      <CardList
-        selectValue={selectValue}
-        currentPage={currentPage}
-        setIsOpen={setIsOpenDescription}
-      />
+      <CardList onOpen={onOpen} selectValue={selectValue} currentPage={currentPage} />
     </div>
   );
 };

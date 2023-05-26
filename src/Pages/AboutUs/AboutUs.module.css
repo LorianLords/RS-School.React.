@@ -1,5 +1,5 @@
 .text{
     font-size: large;
-    position: absolute;
+    display: flex;
 
 }

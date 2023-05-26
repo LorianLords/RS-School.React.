@@ -1,10 +1,6 @@
 import { AsyncThunk, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { AxiosProgressEvent } from 'axios';
-import axios from 'axios';
-import { RickAndMortyCardProps } from '../Pages/MainPage/MainPage';
-import { AnyAsyncThunk } from '@reduxjs/toolkit/dist/matchers';
-import cardList from '../components/CardList/CardList';
-import { RootState } from '../store';
+import { SLICES_NAMES } from '../shared/consts';
+import { RickAndMortyCardProps } from '../shared/interfaces';
 
 export interface ResponseData {
   info?: {
@@ -32,7 +28,7 @@ const initialState: CardsState = {
 };
 
 export const cardSlice = createSlice({
-  name: 'cards',
+  name: SLICES_NAMES.Cards,
   initialState,
   reducers: {
     setCardsPages(state, action) {

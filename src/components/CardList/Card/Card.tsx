@@ -2,29 +2,22 @@ import React, { MouseEventHandler, useState } from 'react';
 import s from '../Cards.module.css';
 import { useAppDispatch } from '../../../hooks';
 import { setModalWindow } from '../../../Features/CardsSlice';
+import {  RickAndMortyCardProps } from '../../../shared/interfaces';
+import { useModalState } from '../../../hooks/useModalState';
 
-export type CardProps = {
-  id: number;
-  name: string;
-  gender: string;
-  species: string;
-  created: string;
-  status: string;
-  image: string;
-  type?: string;
-  origin?: { name: string; url?: string };
+type CardProps = {
+  onOpen: () => void;
+  card: RickAndMortyCardProps;
 };
-export type IProps = {
-  card: CardProps;
-  setIsOpen: React.Dispatch<boolean>;
-};
-const Card = ({ setIsOpen, card }: IProps) => {
+const Card = ({ onOpen, card }: CardProps) => {
+
   const { id, name, gender, created, species, status, image } = card;
   const dispatch = useAppDispatch();
-  const handleClick: MouseEventHandler<HTMLDivElement> = (e) => {
+
+  const handleClick: MouseEventHandler<HTMLDivElement> = () => {
     document.body.classList.add('modalOpen');
     dispatch(setModalWindow({ id }));
-    setIsOpen(true);
+    onOpen();
   };
 
   return (
